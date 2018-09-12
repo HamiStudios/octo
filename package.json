@@ -1,0 +1,38 @@
+{
+  "name": "@hamistudios/octo",
+  "version": "0.1.0-beta.0",
+  "description": "simplistic nodejs express web framework",
+  "main": "./lib/index.js",
+  "scripts": {
+    "clean": "rm -rf ./lib",
+    "build:babel": "babel src -d lib",
+    "build": "npm-run-all clean build:babel",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/hammy2899/octo.git"
+  },
+  "keywords": [
+    "web framework",
+    "framework",
+    "express"
+  ],
+  "author": "HamiStudios",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hammy2899/octo/issues"
+  },
+  "homepage": "https://github.com/hammy2899/octo#readme",
+  "dependencies": {
+    "circle-assign": "^1.0.8",
+    "dot-prop": "^4.2.0",
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "npm-run-all": "^4.1.3"
+  }
+}
