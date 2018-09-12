@@ -88,7 +88,8 @@ class Server {
   /**
    * Start the server
    *
-   * @param {function} [callback] Callback which is called once the server is listening
+   * @param {function(listener: net.Socket)} [callback] Callback which is called once the server
+   *                                                    is listening and with the listener
    */
   start(callback = () => {}) {
     // create an express app
@@ -116,8 +117,10 @@ class Server {
     );
 
     // start the server
-    this.expressApp
-      .listen(this.options.port, this.options.host, callback);
+    this.serverListener = this.expressApp
+      .listen(this.options.port, this.options.host, () => {
+        if (typeof callback === 'function') callback(this.serverListener);
+      });
   }
 }
 
