@@ -1,4 +1,6 @@
+// npm
 import path from 'path';
+import assign from 'circle-assign';
 
 class OctoResponse {
   /**
@@ -151,7 +153,7 @@ class OctoResponse {
    * Render the specified view
    *
    * @param {string} view The view name
-   * @param {Object} [data] The data to pass to the view
+   * @param {Object} [data={}] The data to pass to the view
    * @param {function(err: Error, html: string)} [callback] A callback which contains an error if
    *                                                        one and the HTML which can be used as
    *                                                        the response body
@@ -159,8 +161,11 @@ class OctoResponse {
    * @return {OctoResponse}
    */
   render(view, data = {}, callback = undefined) {
-    if (callback === undefined) this.response.render(view, data);
-    else this.response.render(view, data, callback);
+    // assign (override) the data to the default data
+    const locals = assign(this.response.locals, data);
+
+    if (callback === undefined) this.response.render(view, locals);
+    else this.response.render(view, locals, callback);
 
     return this;
   }
