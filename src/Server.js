@@ -40,6 +40,9 @@ class Server {
     this.options = assign(ServerOptions, options);
     this.routes = [];
     this.middlewares = [];
+
+    // create an express app
+    this.expressApp = express();
   }
 
   /**
@@ -86,15 +89,22 @@ class Server {
   }
 
   /**
+   * Set a server value with the specified name and value
+   *
+   * @param {string} name The setting name
+   * @param {*} value The setting value
+   */
+  set(name, value) {
+    this.expressApp.set(name, value);
+  }
+
+  /**
    * Start the server
    *
    * @param {function(listener: net.Socket)} [callback] Callback which is called once the server
    *                                                    is listening and with the listener
    */
   start(callback = () => {}) {
-    // create an express app
-    this.expressApp = express();
-
     // enable body parsing
     this.expressApp.use(express.json());
     this.expressApp.use(express.urlencoded({
