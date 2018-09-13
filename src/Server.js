@@ -126,7 +126,7 @@ class Server {
    *
    * @param {Object} data The default data
    */
-  setRenderDefaultData(data) {
+  setDefaultRenderData(data) {
     this.expressApp.locals = data;
   }
 
