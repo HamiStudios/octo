@@ -99,6 +99,17 @@ class Server {
   }
 
   /**
+   * Get the specified server setting value
+   *
+   * @param {string} name The setting name
+   *
+   * @return {*} The setting value
+   */
+  get(name) {
+    return this.expressApp.get(name);
+  }
+
+  /**
    * Start the server
    *
    * @param {function(listener: net.Socket)} [callback] Callback which is called once the server
