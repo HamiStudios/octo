@@ -110,6 +110,18 @@ class Server {
   }
 
   /**
+   * Set the render engine used by express
+   *
+   * @param {string} name The render engine name
+   * @param {function} execFunction The function which is normally returned when creating the render
+   *                                engine instance
+   */
+  setRenderEngine(name, execFunction) {
+    this.expressApp.engine(name, execFunction);
+    this.expressApp.set('view engine', name);
+  }
+
+  /**
    * Start the server
    *
    * @param {function(listener: net.Socket)} [callback] Callback which is called once the server
