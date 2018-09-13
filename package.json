@@ -7,6 +7,7 @@
     "clean": "rm -rf ./lib",
     "build:babel": "babel src -d lib",
     "build": "npm-run-all clean build:babel",
+    "build:watch": "babel src -d lib --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
