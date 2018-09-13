@@ -122,6 +122,15 @@ class Server {
   }
 
   /**
+   * Set the default data value for the render engine
+   *
+   * @param {Object} data The default data
+   */
+  setRenderDefaultData(data) {
+    this.expressApp.locals = data;
+  }
+
+  /**
    * Start the server
    *
    * @param {function(listener: net.Socket)} [callback] Callback which is called once the server
