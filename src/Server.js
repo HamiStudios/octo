@@ -3,6 +3,7 @@ import assign from 'circle-assign';
 import express from 'express';
 
 // lib
+import OctoRouter from './Router';
 import OctoRoute from './Route';
 import OctoMiddleware from './Middleware';
 
@@ -38,11 +39,27 @@ const ServerOptions = {
 class Server {
   constructor(options) {
     this.options = assign(ServerOptions, options);
+    this.routers = [];
     this.routes = [];
     this.middlewares = [];
 
     // create an express app
     this.expressApp = express();
+  }
+
+  /**
+   * Define a new router
+   *
+   * @param {OctoRouter} router The router instance
+   *
+   * @return {boolean} Whether or not it was successfully added
+   */
+  router(router) {
+    if (router instanceof OctoRouter) {
+      this.routers.push(router);
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -151,6 +168,9 @@ class Server {
 
     // add the routes to the express app
     ServerHelper.addRoutes(this.expressApp, this.routes);
+
+    // add the routers to the express app
+    ServerHelper.addRouters(this.expressApp, this.routers);
 
     // add the middlewares which run after the routes to the express app
     ServerHelper.addMiddlewares(

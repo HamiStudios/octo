@@ -1,3 +1,6 @@
+// npm
+import express from 'express';
+
 // lib
 import OctoRequest from '../Request';
 import OctoResponse from '../Response';
@@ -98,6 +101,37 @@ class ServerHelper {
       } else {
         throw NoMiddlewareMethod(middleware);
       }
+    });
+  }
+
+  /**
+   * Add an array of routes to the specified express app
+   *
+   * @param {Express} expressApp The express app
+   * @param {OctoRouter[]} routers The routers
+   */
+  static addRouters(expressApp, routers) {
+    routers.forEach((router) => {
+      const expressRouter = express.Router();
+      const middlewares = router.getMiddlewares();
+      const routes = router.getRoutes();
+
+      // add the middlewares which run before the routes to the router
+      this.addMiddlewares(
+        expressRouter,
+        middlewares.filter(mw => mw.afterRoutes === false),
+      );
+
+      // add the routes to the router
+      this.addRoutes(expressRouter, routes);
+
+      // add the middlewares which run after the routes to the router
+      this.addMiddlewares(
+        expressRouter,
+        middlewares.filter(mw => mw.afterRoutes === true),
+      );
+
+      expressApp.use(router.getBasePath(), expressRouter);
     });
   }
 }
