@@ -162,7 +162,7 @@ class OctoResponse {
    */
   render(view, data = {}, callback = undefined) {
     // assign (override) the data to the default data
-    const locals = assign(this.response.locals, data);
+    const locals = assign(this.response.app.defaultRenderData, data);
 
     if (callback === undefined) this.response.render(view, locals);
     else this.response.render(view, locals, callback);

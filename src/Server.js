@@ -127,13 +127,13 @@ class Server {
    * @param {Object} data The default data
    */
   setDefaultRenderData(data) {
-    this.expressApp.locals = data;
+    this.expressApp.defaultRenderData = data;
   }
 
   /**
    * Start the server
    *
-   * @param {function(listener: net.Socket)} [callback] Callback which is called once the server
+   * @param {function(listener: Socket)} [callback] Callback which is called once the server
    *                                                    is listening and with the listener
    */
   start(callback = () => {}) {
