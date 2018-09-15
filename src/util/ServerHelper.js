@@ -65,6 +65,12 @@ class ServerHelper {
     });
   }
 
+  /**
+   * Add an array of middlewares to the specified express app
+   *
+   * @param {Express} expressApp The express app
+   * @param {OctoMiddleware[]} middlewares The middlewares
+   */
   static addMiddlewares(expressApp, middlewares) {
     // for each middleware
     middlewares.forEach((middleware) => {
