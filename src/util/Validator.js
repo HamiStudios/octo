@@ -2,6 +2,13 @@
 import OctoMethod from '../enums/Method';
 
 class Validator {
+  /**
+   * Check whether or not the route has any request method functions
+   *
+   * @param {OctoRoute} route The route to check
+   *
+   * @return {boolean} Whether not it has at least one request method function
+   */
   static hasRequestMethod(route) {
     // get all the functions
     const functions = Object.getOwnPropertyNames(route.prototype);
@@ -16,12 +23,19 @@ class Validator {
     return contains.length > 0;
   }
 
+  /**
+   * Check whether or not the middleware has a use function
+   *
+   * @param {OctoMiddleware} middleware The middleware to check
+   *
+   * @return {boolean} Whether not it has a use function
+   */
   static hasMiddlewareMethod(middleware) {
     // get all the functions
     const functions = Object.getOwnPropertyNames(middleware.prototype);
 
     // if functions contains `use` the middleware can be used
-    return functions.indexOf('use');
+    return functions.indexOf('use') > -1;
   }
 }
 
