@@ -127,6 +127,20 @@ class Server {
   }
 
   /**
+   * Serve the specified directory as static files
+   *
+   * @param {string} directory Path to the directory to serve
+   * @param {string} [basePath=''] The base path to serve the content under
+   */
+  static(directory, basePath = '') {
+    if (basePath === '') {
+      this.expressApp.use(express.static(directory));
+    } else {
+      this.expressApp.use(basePath, express.static(directory));
+    }
+  }
+
+  /**
    * Set the render engine used by express
    *
    * @param {string} name The render engine name
