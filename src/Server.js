@@ -19,7 +19,7 @@ import ServerHelper from './util/ServerHelper';
 import NoModule from './errors/NoModule';
 
 /**
- * @typedef ServerOptions
+ * @typedef defaultServerOptions
  * @type {Object}
  *
  * @property {OctoProtocol} protocol The protocol the server should use
@@ -30,7 +30,7 @@ import NoModule from './errors/NoModule';
  * @property {string} ssl.cert The path to the certificate
  * @property {string} ssl.key The path to the key
  */
-const ServerOptions = {
+const defaultServerOptions = {
   protocol: OctoProtocol.HTTP,
   host: 'localhost',
   port: 8585,
@@ -43,7 +43,7 @@ const ServerOptions = {
 
 class Server {
   constructor(options) {
-    this.options = assign(ServerOptions, options);
+    this.options = assign(defaultServerOptions, options);
     this.routers = [];
     this.routes = [];
     this.middlewares = [];
