@@ -71,17 +71,17 @@ class Server {
   /**
    * Define a new route
    *
-   * @param {string} path The route path
+   * @param {string} routePath The route path
    * @param {OctoRoute} instance The route instance
    *
    * @return {boolean} Whether or not it was successfully added
    */
-  route(path, instance) {
+  route(routePath, instance) {
     const Instance = instance;
 
     if (new Instance() instanceof OctoRoute) {
       this.routes.push({
-        path,
+        routePath,
         Instance,
       });
       return true;
