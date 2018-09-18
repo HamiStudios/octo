@@ -1,6 +1,7 @@
 // npm
 import fs from 'fs';
 import path from 'path';
+import https from 'https';
 import assign from 'circle-assign';
 import express from 'express';
 
@@ -27,8 +28,8 @@ import NoModule from './errors/NoModule';
  * @property {number} port The port the server should use
  * @property {Object} ssl The SSL options the server should use
  * @property {boolean} ssl.enabled Whether or not the server should use SSL
- * @property {string} ssl.cert The path to the certificate
- * @property {string} ssl.key The path to the key
+ * @property {string} ssl.certificate The path to the certificate
+ * @property {string} ssl.privateKey The path to the key
  */
 const defaultServerOptions = {
   protocol: OctoProtocol.HTTP,
@@ -36,8 +37,8 @@ const defaultServerOptions = {
   port: 8585,
   ssl: {
     enabled: false,
-    cert: null,
-    key: null,
+    certificate: null,
+    privateKey: null,
   },
 };
 
@@ -47,7 +48,6 @@ class Server {
     this.routers = [];
     this.routes = [];
     this.middlewares = [];
-    this.nodeModulesDirectory = null;
 
     // create an express app
     this.expressApp = express();
@@ -239,11 +239,29 @@ class Server {
       this.middlewares.filter(mw => mw.afterRoutes === true),
     );
 
-    // start the server
-    this.serverListener = this.expressApp
-      .listen(this.options.port, this.options.host, () => {
+    // check whether ssl is enabled and the private key and certificate paths exist
+    const privateKeyPath = this.options.ssl.privateKey;
+    const certificatePath = this.options.ssl.certificate;
+
+    if (this.options.ssl.enabled && privateKeyPath !== null && certificatePath !== null) {
+      // get private key and certificate
+      const privateKey = fs.readFileSync(privateKeyPath);
+      const certificate = fs.readFileSync(certificatePath);
+
+      // start a https server
+      https.createServer({
+        key: privateKey,
+        cert: certificate,
+      }, this.expressApp).listen(this.options.port, this.options.host, () => {
         if (typeof callback === 'function') callback(this.serverListener);
       });
+    } else {
+      // start a http server
+      this.serverListener = this.expressApp
+        .listen(this.options.port, this.options.host, () => {
+          if (typeof callback === 'function') callback(this.serverListener);
+        });
+    }
   }
 }
 

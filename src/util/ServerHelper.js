@@ -32,7 +32,7 @@ class ServerHelper {
     // for each route
     routes.forEach((route) => {
       const {
-        path,
+        routePath,
         Instance,
       } = route;
 
@@ -46,13 +46,13 @@ class ServerHelper {
           // check if the route has a function for the method
           if (functions.indexOf(method) > -1) {
             // if it does add it to the express routes for that method
-            expressApp[method](path, (expressRequest, expressResponse, nextHandler) => {
+            expressApp[method](routePath, (expressRequest, expressResponse, nextHandler) => {
               // create the request and response instances
               const request = new OctoRequest(expressRequest);
               const response = new OctoResponse(expressResponse);
 
               // create the route context
-              const context = new OctoRouteContext(path, request, response, nextHandler);
+              const context = new OctoRouteContext(routePath, request, response, nextHandler);
 
               // create the route instance
               const routeInstance = new Instance(context);
