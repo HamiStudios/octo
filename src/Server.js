@@ -1,4 +1,6 @@
 // npm
+import fs from 'fs';
+import path from 'path';
 import assign from 'circle-assign';
 import express from 'express';
 
@@ -12,6 +14,9 @@ import OctoProtocol from './enums/Protocol';
 
 // util
 import ServerHelper from './util/ServerHelper';
+
+// errors
+import NoModule from './errors/NoModule';
 
 /**
  * @typedef ServerOptions
@@ -42,6 +47,7 @@ class Server {
     this.routers = [];
     this.routes = [];
     this.middlewares = [];
+    this.nodeModulesDirectory = null;
 
     // create an express app
     this.expressApp = express();
@@ -137,6 +143,47 @@ class Server {
       this.expressApp.use(express.static(directory));
     } else {
       this.expressApp.use(basePath, express.static(directory));
+    }
+  }
+
+  /**
+   * Serve the specified node module as static files
+   *
+   * @param {string|string[]} modules The name of the module or array of modules
+   * @param {string} [basePath=''] The base path to serve the content under
+   */
+  staticModule(modules, basePath = '') {
+    const getModulePath = (module) => {
+      const modulePath = path.resolve(process.cwd(), 'node_modules', module);
+
+      if (fs.existsSync(modulePath) && fs.statSync(modulePath).isDirectory()) {
+        return modulePath;
+      }
+
+      throw NoModule(module);
+    };
+
+    const serve = (module, modulePath) => {
+      if (basePath === '') {
+        this.expressApp.use(`/${module}`, express.static(modulePath));
+      } else {
+        this.expressApp.use(`${basePath}/${module}`, express.static(modulePath));
+      }
+    };
+
+    // if only one module is specified
+    if (typeof modules === 'string') {
+      const module = modules;
+      const modulePath = getModulePath(module);
+
+      serve(module, modulePath);
+    } else {
+      // if multiple modules are specified (in an array)
+      modules.forEach((module) => {
+        const modulePath = getModulePath(module);
+
+        serve(module, modulePath);
+      });
     }
   }
 

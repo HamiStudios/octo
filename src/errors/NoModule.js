@@ -1,12 +1,3 @@
-function getError(route) {
-  const {
-    path,
-    instance: RouteInstance,
-  } = route;
-
-  const routeInstance = new RouteInstance();
-
-  return new Error(`The route '${routeInstance.constructor.name}' doesn't have any request methods. Failed to register endpoint '${path}'.`);
+export default function getError(module) {
+  return new Error(`The module '${module}' either doesn't exist or is not installed. Failed to serve '${module}' as static files.`);
 }
-
-export default getError;
