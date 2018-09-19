@@ -8,7 +8,9 @@
     "build:babel": "babel src -d lib",
     "build": "npm-run-all clean build:babel",
     "build:watch": "babel src -d lib --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:eslint": "eslint src tests",
+    "test:jest": "./node_modules/.bin/jest --coverage --verbose",
+    "test": "npm-run-all test:eslint test:jest"
   },
   "repository": {
     "type": "git",
