@@ -4,7 +4,7 @@ export default function getError(route) {
     Instance,
   } = route;
 
-  const routeInstance = new Instance('/', {}, {}, () => {});
+  const routeInstance = new Instance('', {}, {}, null);
 
   return new Error(`The route '${routeInstance.constructor.name}' doesn't have any request methods. Failed to register endpoint '${path}'.`);
 }
