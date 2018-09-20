@@ -4,6 +4,7 @@ import express from 'express';
 // lib
 import OctoRequest from '../Request';
 import OctoResponse from '../Response';
+import OctoExpressContext from '../ExpressContext';
 import OctoRouteContext from '../RouteContext';
 import OctoMiddlewareContext from '../MiddlewareContext';
 

@@ -1,10 +1,21 @@
-class OctoRoute {
+// libs
+import OctoExpressContext from './ExpressContext';
+
+class OctoRoute extends OctoExpressContext {
   /**
    * Create a new OctoRoute
    *
-   * @param {OctoRouteContext} context The route context
+   * @param {string} path The route path
+   * @param {OctoExpressContext} context The route context
    */
-  constructor(context) {
+  constructor(path, context) {
+    super(
+      context.request,
+      context.response,
+      context.nextHandlerCallback,
+    );
+
+    this.path = path;
     this.context = context;
   }
 
@@ -14,7 +25,7 @@ class OctoRoute {
    * @return {string} The route path
    */
   getPath() {
-    return this.context.path;
+    return this.path;
   }
 
   /**

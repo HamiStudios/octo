@@ -1,6 +1,6 @@
-class OctoMiddlewareContext {
+class OctoExpressContext {
   /**
-   * Create a new OctoMiddlewareContext
+   * Create a new OctoRouteContext
    *
    * @param {OctoRequest} request The OctoRequest instance
    * @param {OctoResponse} response The OctoResponse instance
@@ -13,4 +13,4 @@ class OctoMiddlewareContext {
   }
 }
 
-export default OctoMiddlewareContext;
+export default OctoExpressContext;

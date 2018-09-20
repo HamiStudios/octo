@@ -1,13 +1,7 @@
-class OctoMiddleware {
-  /**
-   * Create a new OctoMiddleware
-   *
-   * @param {OctoMiddlewareContext} context The route context
-   */
-  constructor(context) {
-    this.context = context;
-  }
+// libs
+import OctoExpressContext from './ExpressContext';
 
+class OctoMiddleware extends OctoExpressContext {
   /**
    * Get the request instance
    *
