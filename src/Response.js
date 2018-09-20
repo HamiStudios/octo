@@ -143,8 +143,7 @@ class OctoResponse {
    * @return {OctoResponse}
    */
   redirect(urlOrPath, status = 302) {
-    if (status !== 302) this.response.redirect(status, urlOrPath);
-    else this.response.redirect(urlOrPath);
+    this.response.redirect(status, urlOrPath);
 
     return this;
   }
