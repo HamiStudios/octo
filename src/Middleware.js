@@ -1,19 +1,10 @@
-// libs
-import OctoExpressContext from './ExpressContext';
-
-class OctoMiddleware extends OctoExpressContext {
+class OctoMiddleware {
   /**
    * Create a new OctoMiddleware
    *
    * @param {OctoExpressContext} context The route context
    */
   constructor(context) {
-    super(
-      context.request,
-      context.response,
-      context.nextHandlerCallback,
-    );
-
     this.context = context;
   }
 
