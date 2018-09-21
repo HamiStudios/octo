@@ -19,32 +19,32 @@ import ServerHelper from './util/ServerHelper';
 // errors
 import NoModule from './errors/NoModule';
 
-/**
- * @typedef defaultServerOptions
- * @type {Object}
- *
- * @property {OctoProtocol} protocol The protocol the server should use
- * @property {string} host The host the server should use
- * @property {number} port The port the server should use
- * @property {Object} ssl The SSL options the server should use
- * @property {boolean} ssl.enabled Whether or not the server should use SSL
- * @property {string} ssl.certificate The path to the certificate
- * @property {string} ssl.privateKey The path to the key
- */
-const defaultServerOptions = {
-  protocol: OctoProtocol.HTTP,
-  host: 'localhost',
-  port: 8585,
-  ssl: {
-    enabled: false,
-    certificate: null,
-    privateKey: null,
-  },
-};
-
 class Server {
   constructor(options) {
-    this.options = assign(defaultServerOptions, options);
+    /**
+     * @typedef defaultServerOptions
+     * @type {Object}
+     *
+     * @property {OctoProtocol} protocol The protocol the server should use
+     * @property {string} host The host the server should use
+     * @property {number} port The port the server should use
+     * @property {Object} ssl The SSL options the server should use
+     * @property {boolean} ssl.enabled Whether or not the server should use SSL
+     * @property {string} ssl.certificate The path to the certificate
+     * @property {string} ssl.privateKey The path to the key
+     */
+    this.defaultServerOptions = {
+      protocol: OctoProtocol.HTTP,
+      host: 'localhost',
+      port: 8585,
+      ssl: {
+        enabled: false,
+        certificate: null,
+        privateKey: null,
+      },
+    };
+
+    this.options = assign(this.defaultServerOptions, options);
     this.routers = [];
     this.routes = [];
     this.middlewares = [];
