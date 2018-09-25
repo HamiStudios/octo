@@ -8,6 +8,7 @@ const OctoMethod = Object.freeze({
   OPTIONS: 'OPTIONS',
   TRACE: 'TRACE',
   PATCH: 'PATCH',
+  ALL: 'ALL',
 
   // methods
   values: function values() {
