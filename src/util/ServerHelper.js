@@ -4,8 +4,7 @@ import express from 'express';
 // lib
 import OctoRequest from '../Request';
 import OctoResponse from '../Response';
-import OctoRouteContext from '../RouteContext';
-import OctoMiddlewareContext from '../MiddlewareContext';
+import OctoExpressContext from '../ExpressContext';
 
 // enums
 import OctoMethod from '../enums/Method';
@@ -52,10 +51,10 @@ class ServerHelper {
               const response = new OctoResponse(expressResponse);
 
               // create the route context
-              const context = new OctoRouteContext(routePath, request, response, nextHandler);
+              const context = new OctoExpressContext(request, response, nextHandler);
 
               // create the route instance
-              const routeInstance = new Instance(context);
+              const routeInstance = new Instance(routePath, context);
 
               // run the method function
               routeInstance[method]();
@@ -90,7 +89,7 @@ class ServerHelper {
           const response = new OctoResponse(expressResponse);
 
           // create the route context
-          const context = new OctoMiddlewareContext(request, response, nextHandler);
+          const context = new OctoExpressContext(request, response, nextHandler);
 
           // create the route instance
           const routeInstance = new Instance(context);

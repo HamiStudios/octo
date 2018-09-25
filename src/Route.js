@@ -2,9 +2,11 @@ class OctoRoute {
   /**
    * Create a new OctoRoute
    *
-   * @param {OctoRouteContext} context The route context
+   * @param {string} path The route path
+   * @param {OctoExpressContext} context The route context
    */
-  constructor(context) {
+  constructor(path, context) {
+    this.path = path;
     this.context = context;
   }
 
@@ -14,7 +16,7 @@ class OctoRoute {
    * @return {string} The route path
    */
   getPath() {
-    return this.context.path;
+    return this.path;
   }
 
   /**

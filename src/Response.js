@@ -94,16 +94,16 @@ class OctoResponse {
    *
    * @param {string} filePath The path to the file to download
    * @param {string} [filename=file name] The name of the file they download
-   * @param {Object} [options={}] The download options
+   * @param {Object|Function} [optionsOrCallback={}] The download options or a callback
    * @param {function(err: Error)} callback Callback with error if the file errors
    *
    * @return {OctoResponse}
    */
-  download(filePath, filename = '', options = {}, callback = () => {}) {
+  download(filePath, filename = '', optionsOrCallback = {}, callback = () => {}) {
     let downloadName = filename;
     if (downloadName === '') downloadName = path.basename(filePath);
 
-    this.response.download(filePath, downloadName, options, callback);
+    this.response.download(filePath, downloadName, optionsOrCallback, callback);
 
     return this;
   }
@@ -143,8 +143,7 @@ class OctoResponse {
    * @return {OctoResponse}
    */
   redirect(urlOrPath, status = 302) {
-    if (status !== 302) this.response.redirect(status, urlOrPath);
-    else this.response.redirect(urlOrPath);
+    this.response.redirect(status, urlOrPath);
 
     return this;
   }
