@@ -1,13 +1,13 @@
 // lib
-import NoMiddlewareMethod from '../../src/errors/NoMiddlewareMethod';
-import OctoMiddleware from '../../src/Middleware';
+import NoRequestMethod from '../../src/errors/NoRequestMethod';
+import OctoRoute from '../../src/Route';
 
-test('NoMiddlewareMethod should be a function', () => {
-  expect(typeof NoMiddlewareMethod).toBe('function');
+test('NoRequestMethod should be a function', () => {
+  expect(typeof NoRequestMethod).toBe('function');
 });
 
 test('should return an Error instance', () => {
-  class TestMiddleware extends OctoMiddleware {}
+  class TestRoute extends OctoRoute {}
 
-  expect(NoMiddlewareMethod({ Instance: TestMiddleware })).toBeInstanceOf(Error);
+  expect(NoRequestMethod({ Instance: TestRoute, path: '/' })).toBeInstanceOf(Error);
 });
