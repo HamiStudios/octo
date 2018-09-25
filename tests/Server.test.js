@@ -96,8 +96,6 @@ test('.set() should set the specified value using the specified name', () => {
 test('.get() should get the specified value using the specified name', () => {
   server.expressApp.sets.test = 'testing';
 
-  console.log(server.expressApp.sets);
-
   expect(server.get('test')).toBe('testing');
 });
 
