@@ -1,5 +1,6 @@
 // lib
 import OctoMethod from '../enums/Method';
+import OctoStatusCode from '../enums/StatusCode';
 
 class Validator {
   /**
@@ -36,6 +37,27 @@ class Validator {
 
     // if functions contains `use` the middleware can be used
     return functions.indexOf('use') > -1;
+  }
+
+  /**
+   * Check whether or not the error handler has a error handling function
+   *
+   * @param {OctoErrorHandler} errorHandler The error handler to check
+   *
+   * @return {boolean} Whether or not it has a error handling function
+   */
+  static hasErrorHandlerMethod(errorHandler) {
+    // get all the functions
+    const functions = Object.getOwnPropertyNames(errorHandler.prototype);
+
+    // get an array of all error codes
+    const codes = OctoStatusCode.values().map(code => code.toLowerCase());
+
+    // get an array of all the error codes the error handler has a function for
+    const contains = codes.filter(code => functions.indexOf(code) > -1);
+
+    // if the error handler contains 1 or more functions it has can be used
+    return contains.length > 0;
   }
 }
 

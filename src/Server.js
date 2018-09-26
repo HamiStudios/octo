@@ -9,6 +9,7 @@ import express from 'express';
 import OctoRouter from './Router';
 import OctoRoute from './Route';
 import OctoMiddleware from './Middleware';
+import OctoErrorHandler from './ErrorHandler';
 
 // enums
 import OctoProtocol from './enums/Protocol';
@@ -48,6 +49,7 @@ class Server {
     this.routers = [];
     this.routes = [];
     this.middlewares = [];
+    this.errorHandlers = [];
 
     // create an express app
     this.expressApp = express();
@@ -104,6 +106,38 @@ class Server {
     if (new Instance() instanceof OctoMiddleware) {
       this.middlewares.push({
         afterRoutes,
+        Instance,
+      });
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Define a new error handler
+   *
+   * @param {string|OctoErrorHandler} pathOrInstance The path to use or error handler instance
+   * @param {OctoErrorHandler} [instance=null] The error handler instance
+   *
+   * @return {boolean} Whether or not it was successfully added
+   */
+  errorHandler(pathOrInstance, instance = null) {
+    let Instance = instance;
+    let routePath = null;
+
+    if (typeof pathOrInstance === 'string') {
+      routePath = pathOrInstance;
+    } else {
+      Instance = pathOrInstance;
+    }
+
+    if (instance !== null && new Instance() instanceof OctoErrorHandler) {
+      Instance = instance;
+    }
+
+    if (new Instance() instanceof OctoErrorHandler) {
+      this.errorHandlers.push({
+        routePath,
         Instance,
       });
       return true;
@@ -212,7 +246,7 @@ class Server {
    * Start the server
    *
    * @param {function(listener: Socket)} [callback] Callback which is called once the server
-   *                                                    is listening and with the listener
+   *                                                is listening and with the listener
    */
   start(callback = () => {}) {
     // enable body parsing
@@ -238,6 +272,9 @@ class Server {
       this.expressApp,
       this.middlewares.filter(mw => mw.afterRoutes === true),
     );
+
+    // add error handlers to the express app
+    ServerHelper.addErrorHandlers(this.expressApp, this.errorHandlers);
 
     // check whether ssl is enabled and the private key and certificate paths exist
     const privateKeyPath = this.options.ssl.privateKey;

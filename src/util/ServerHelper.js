@@ -8,6 +8,7 @@ import OctoExpressContext from '../ExpressContext';
 
 // enums
 import OctoMethod from '../enums/Method';
+import OctoStatusCode from '../enums/StatusCode';
 
 // util
 import Validator from './Validator';
@@ -15,6 +16,7 @@ import Validator from './Validator';
 // errors
 import NoRequestMethod from '../errors/NoRequestMethod';
 import NoMiddlewareMethod from '../errors/NoMiddlewareMethod';
+import NoErrorHandlingMethod from '../errors/NoErrorHandlingMethod';
 
 
 class ServerHelper {
@@ -131,6 +133,87 @@ class ServerHelper {
       );
 
       expressApp.use(router.getBasePath(), expressRouter);
+    });
+  }
+
+  /**
+   * Add an array of error handlers to the specified express app
+   *
+   * @param {Express} expressApp The express app
+   * @param {OctoErrorHandler[]} errorHandlers The error handlers
+   */
+  static addErrorHandlers(expressApp, errorHandlers) {
+    // get an array of all error codes
+    const codes = OctoStatusCode.values().map(code => code.toLowerCase());
+
+    console.log('codes', codes);
+
+    // for each error handler
+    errorHandlers.forEach((errorHandler) => {
+      const {
+        routePath,
+        Instance,
+      } = errorHandler;
+
+      // check if the route has any error handling functions
+      if (Validator.hasErrorHandlerMethod(Instance)) {
+        // get all the functions
+        const functions = Object.getOwnPropertyNames(Instance.prototype);
+
+        console.log('functions', functions);
+
+        // for each error code
+        codes.forEach((code) => {
+          // check if the error handler has a function for the code
+          if (functions.indexOf(code) > -1) {
+            console.log('handler has', code);
+            console.log('hanlder', errorHandler);
+
+            // if it does add it to the express routes for that error code
+            const expressFunction = (expressRequest, expressResponse, nextHandler) => {
+              console.log('ran error handler');
+
+              // create the request and response instances
+              const request = new OctoRequest(expressRequest);
+              const response = new OctoResponse(expressResponse);
+
+              // check if the current status code is the error handler status code
+              console.log('check if', OctoStatusCode.valueOf(code), ' is ', response.getStatus());
+
+              if (OctoStatusCode.valueOf(code) === response.getStatus()) {
+                // create the route context
+                const context = new OctoExpressContext(request, response, nextHandler);
+
+                // create the handler instance
+                let handlerInstance = null;
+
+                if (routePath !== null) {
+                  console.log('create instance with path');
+                  handlerInstance = new Instance(routePath, context);
+                } else {
+                  console.log('create instance of no path');
+                  handlerInstance = new Instance(context);
+                }
+
+                // run the error code function
+                handlerInstance[code]();
+              } else {
+                nextHandler();
+              }
+            };
+
+            if (routePath !== null) {
+              console.log('has path');
+              expressApp.use(routePath, expressFunction);
+            } else {
+              console.log('no path');
+              expressApp.use(expressFunction);
+            }
+          }
+        });
+      } else {
+        throw NoErrorHandlingMethod(errorHandler);
+      }
     });
   }
 }
