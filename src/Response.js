@@ -211,6 +211,15 @@ class OctoResponse {
   }
 
   /**
+   * Get the current response status code
+   *
+   * @return {number}
+   */
+  getStatus() {
+    return this.response.statusCode;
+  }
+
+  /**
    * Set the response type
    *
    * @param {string} type The type
