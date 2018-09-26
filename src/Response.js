@@ -216,7 +216,7 @@ class OctoResponse {
    * @return {number}
    */
   getStatus() {
-    return this.response.status;
+    return this.response.statusCode;
   }
 
   /**
