@@ -146,8 +146,6 @@ class ServerHelper {
     // get an array of all error codes
     const codes = OctoStatusCode.values().map(code => code.toLowerCase());
 
-    console.log('codes', codes);
-
     // for each error handler
     errorHandlers.forEach((errorHandler) => {
       const {
@@ -160,26 +158,17 @@ class ServerHelper {
         // get all the functions
         const functions = Object.getOwnPropertyNames(Instance.prototype);
 
-        console.log('functions', functions);
-
         // for each error code
         codes.forEach((code) => {
           // check if the error handler has a function for the code
           if (functions.indexOf(code) > -1) {
-            console.log('handler has', code);
-            console.log('hanlder', errorHandler);
-
             // if it does add it to the express routes for that error code
             const expressFunction = (expressRequest, expressResponse, nextHandler) => {
-              console.log('ran error handler');
-
               // create the request and response instances
               const request = new OctoRequest(expressRequest);
               const response = new OctoResponse(expressResponse);
 
               // check if the current status code is the error handler status code
-              console.log('check if', OctoStatusCode.valueOf(code), ' is ', response.getStatus());
-
               if (OctoStatusCode.valueOf(code) === response.getStatus()) {
                 // create the route context
                 const context = new OctoExpressContext(request, response, nextHandler);
@@ -188,10 +177,8 @@ class ServerHelper {
                 let handlerInstance = null;
 
                 if (routePath !== null) {
-                  console.log('create instance with path');
                   handlerInstance = new Instance(routePath, context);
                 } else {
-                  console.log('create instance of no path');
                   handlerInstance = new Instance(context);
                 }
 
@@ -203,10 +190,8 @@ class ServerHelper {
             };
 
             if (routePath !== null) {
-              console.log('has path');
               expressApp.use(routePath, expressFunction);
             } else {
-              console.log('no path');
               expressApp.use(expressFunction);
             }
           }
