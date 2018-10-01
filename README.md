@@ -8,7 +8,8 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/@hamistudios/octo"><img src="https://img.shields.io/npm/v/@hamistudios/octo.svg"></a>
   <a href="https://github.com/hamistudios/octo/blob/master/LICENSE.md"><img src="https://img.shields.io/github/license/hamistudios/octo.svg"></a>
-  <a href="https://app.buddy.works/hamistudios/octo/pipelines/pipeline/153168"><img src="https://app.buddy.works/hamistudios/octo/pipelines/pipeline/153168/badge.svg?token=14bd08d0b8a2b94f4e96843b40e4fb9a67b3d8160a9ea724596e81663c9bf8c8"></a>
+  <a href="https://travis-ci.org/HamiStudios/octo"><img src="https://travis-ci.org/HamiStudios/octo.svg?branch=master"></a>
+  <a href='https://coveralls.io/github/HamiStudios/octo?branch=beta'><img src='https://coveralls.io/repos/github/HamiStudios/octo/badge.svg?branch=beta' alt='Coverage Status' /></a>
 </p>
 
 # :loudspeaker: Introduction
