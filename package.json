@@ -1,6 +1,6 @@
 {
   "name": "@hamistudios/octo",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0",
   "description": "simplistic nodejs express web framework",
   "main": "./lib/index.js",
   "scripts": {
