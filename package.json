@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/hammy2899/octo.git"
+    "url": "git+ssh://git@github.com/HamiStudios/octo.git"
   },
   "keywords": [
     "web framework",
@@ -25,9 +25,9 @@
   "author": "HamiStudios",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hammy2899/octo/issues"
+    "url": "https://github.com/HamiStudios/octo/issues"
   },
-  "homepage": "https://github.com/hammy2899/octo#readme",
+  "homepage": "https://github.com/HamiStudios/octo#readme",
   "dependencies": {
     "circle-assign": "^1.0.8",
     "dot-prop": "^4.2.0",
