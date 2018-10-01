@@ -1,6 +1,6 @@
 {
   "name": "@hamistudios/octo",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0",
   "description": "simplistic nodejs express web framework",
   "main": "./lib/index.js",
   "scripts": {
@@ -10,11 +10,12 @@
     "build:watch": "babel src -d lib --watch",
     "test:eslint": "eslint src tests",
     "test:jest": "./node_modules/.bin/jest --coverage --verbose",
-    "test": "npm-run-all test:eslint test:jest"
+    "test": "npm-run-all test:eslint test:jest",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/hammy2899/octo.git"
+    "url": "git+ssh://git@github.com/HamiStudios/octo.git"
   },
   "keywords": [
     "web framework",
@@ -24,9 +25,9 @@
   "author": "HamiStudios",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hammy2899/octo/issues"
+    "url": "https://github.com/HamiStudios/octo/issues"
   },
-  "homepage": "https://github.com/hammy2899/octo#readme",
+  "homepage": "https://github.com/HamiStudios/octo#readme",
   "dependencies": {
     "circle-assign": "^1.0.8",
     "dot-prop": "^4.2.0",
@@ -38,13 +39,16 @@
     "@babel/preset-env": "^7.1.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
+    "coveralls": "^3.0.2",
     "eslint": "^5.6.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1",
     "jest": "^23.6.0",
-    "npm-run-all": "^4.1.3",
-    "regenerator-runtime": "^0.12.1"
+    "npm-run-all": "^4.1.3"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
