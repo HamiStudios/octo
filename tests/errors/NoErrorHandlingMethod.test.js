@@ -9,5 +9,5 @@ test('NoErrorHandlingMethod should be a function', () => {
 test('should return an Error instance', () => {
   class TestErrorHandler extends OctoErrorHandler {}
 
-  expect(NoErrorHandlingMethod({ Instance: OctoErrorHandler })).toBeInstanceOf(Error);
+  expect(NoErrorHandlingMethod({ Instance: TestErrorHandler })).toBeInstanceOf(Error);
 });
