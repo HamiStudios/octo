@@ -161,15 +161,21 @@ class ServerHelper {
         // for each error code
         codes.forEach((code) => {
           // check if the error handler has a function for the code
-          if (functions.indexOf(code) > -1) {
+          if (functions.indexOf(code.toString()) > -1) {
             // if it does add it to the express routes for that error code
             const expressFunction = (expressRequest, expressResponse, nextHandler) => {
+              if (expressResponse.statusCode === 200) {
+                // since error handlers are added last and the status is still 200
+                // this means that there was no route therefore its a 404
+                expressResponse.status(404);
+              }
+
               // create the request and response instances
               const request = new OctoRequest(expressRequest);
               const response = new OctoResponse(expressResponse);
 
               // check if the current status code is the error handler status code
-              if (OctoStatusCode.valueOf(code) === response.getStatus()) {
+              if (OctoStatusCode.valueOf(code).toString() === response.getStatus().toString()) {
                 // create the route context
                 const context = new OctoExpressContext(request, response, nextHandler);
 
