@@ -35,7 +35,7 @@ class OctoRouter {
 
     if (new Instance() instanceof OctoRoute) {
       this.routes.push({
-        path,
+        routePath: path,
         Instance,
       });
       return true;
