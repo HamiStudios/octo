@@ -1,20 +1,20 @@
-// lib
+// octo
+import OctoApp from './App';
 import OctoServer from './Server';
+import OctoRoute from './Actions/Route';
+import OctoOperation from './Actions/Operation';
+import OctoErrorHandler from './Actions/ErrorHandler';
 import OctoRouter from './Router';
-import OctoRoute from './Route';
-import OctoMiddleware from './Middleware';
-import OctoErrorHandler from './ErrorHandler';
-
-// enums
 import OctoMethod from './enums/Method';
-import OctoStatusCode from './enums/StatusCode';
+import OctoProtocol from './enums/Protocol';
 
 export {
+  OctoApp,
   OctoServer,
-  OctoRouter,
   OctoRoute,
-  OctoMiddleware,
+  OctoOperation,
   OctoErrorHandler,
+  OctoRouter,
   OctoMethod,
-  OctoStatusCode,
+  OctoProtocol,
 };
