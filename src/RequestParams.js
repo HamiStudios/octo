@@ -1,4 +1,7 @@
-class OctoRequestParams {
+import * as o from 'o';
+
+
+class RequestParams {
   /**
    * Create a new OctoRequestParams instance
    *
@@ -39,10 +42,27 @@ class OctoRequestParams {
    * @return {boolean} Whether or not the param exists
    */
   exists(key) {
-    const value = this.params[key];
+    return o.has(this.params, key);
+  }
 
-    return value !== undefined;
+  /**
+   * Check if the params only contains the specified keys
+   *
+   * @param {...string} keys The keys to check
+   *
+   * @return {boolean} Whether the params only contains the specified keys
+   */
+  onlyHas(...keys) {
+    let invalid = false;
+
+    o.each(this.params, (k) => {
+      if (keys.indexOf(k) === -1) {
+        invalid = true;
+      }
+    }, true);
+
+    return !invalid;
   }
 }
 
-export default OctoRequestParams;
+export default RequestParams;

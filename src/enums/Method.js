@@ -1,4 +1,4 @@
-const OctoMethod = Object.freeze({
+const Method = Object.freeze({
   GET: 'GET',
   HEAD: 'HEAD',
   POST: 'POST',
@@ -12,15 +12,15 @@ const OctoMethod = Object.freeze({
 
   // methods
   values: function values() {
-    return Object.keys(OctoMethod)
-      .filter(val => typeof OctoMethod[val] === 'string');
+    return Object.keys(Method)
+      .filter(val => typeof Method[val] === 'string');
   },
   valueOf: function valueOf(value) {
     const valueUpper = value.toString().toUpperCase();
-    const values = OctoMethod.values();
+    const values = Method.values();
 
-    return values.indexOf(valueUpper) > -1 ? OctoMethod[valueUpper] : undefined;
+    return values.indexOf(valueUpper) > -1 ? Method[valueUpper] : undefined;
   },
 });
 
-export default OctoMethod;
+export default Method;

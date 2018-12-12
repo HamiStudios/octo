@@ -1,13 +1,11 @@
-// lib
-import OctoRequestBody from './RequestBody';
-import OctoRequestParams from './RequestParams';
-import OctoRequestQuery from './RequestQuery';
+// octo
+import RequestBody from './RequestBody';
+import RequestParams from './RequestParams';
+import RequestQuery from './RequestQuery';
+import Method from './enums/Method';
+import Protocol from './enums/Protocol';
 
-// enums
-import OctoMethod from './enums/Method';
-import OctoProtocol from './enums/Protocol';
-
-class OctoRequest {
+class Request {
   /**
    * Create a new OctoRequest instance
    *
@@ -20,10 +18,10 @@ class OctoRequest {
   /**
    * Get the request body
    *
-   * @return {OctoRequestBody} An OctoRequestBody instance
+   * @return {RequestBody} An OctoRequestBody instance
    */
   getBody() {
-    return new OctoRequestBody(this.request.body);
+    return new RequestBody(this.request.body);
   }
 
   /**
@@ -50,7 +48,7 @@ class OctoRequest {
    * @return {OctoMethod} The request method
    */
   getMethod() {
-    return OctoMethod.valueOf(this.request.method);
+    return Method.valueOf(this.request.method);
   }
 
   /**
@@ -65,10 +63,10 @@ class OctoRequest {
   /**
    * Get the request params
    *
-   * @return {OctoRequestParams} The request params
+   * @return {RequestParams} The request params
    */
   getParams() {
-    return new OctoRequestParams(this.request.params);
+    return new RequestParams(this.request.params);
   }
 
   /**
@@ -86,16 +84,16 @@ class OctoRequest {
    * @return {OctoProtocol} The request protocol
    */
   getProtocol() {
-    return OctoProtocol.valueOf(this.request.protocol);
+    return Protocol.valueOf(this.request.protocol);
   }
 
   /**
    * Get the request query
    *
-   * @return {OctoRequestQuery} The request query
+   * @return {RequestQuery} The request query
    */
   getQuery() {
-    return new OctoRequestQuery(this.request.query);
+    return new RequestQuery(this.request.query);
   }
 
   /**
@@ -155,4 +153,4 @@ class OctoRequest {
   }
 }
 
-export default OctoRequest;
+export default Request;

@@ -1,8 +1,10 @@
-// npm
+// node
 import path from 'path';
-import assign from 'circle-assign';
 
-class OctoResponse {
+// npm
+import { merge as assign } from 'o';
+
+class Response {
   /**
    * Create a new OctoResponse instance
    *
@@ -27,7 +29,7 @@ class OctoResponse {
    * @param {string} name The header name
    * @param {string} value The header value
    *
-   * @return {OctoResponse}
+   * @return {Response}
    */
   addHeader(name, value) {
     this.response.append(name, value);
@@ -51,7 +53,7 @@ class OctoResponse {
    *
    * @param {string} [filePath] The path to the file to attach
    *
-   * @return {OctoResponse}
+   * @return {Response}
    */
   attachment(filePath = '') {
     if (filePath === '') this.response.attachment();
@@ -67,7 +69,7 @@ class OctoResponse {
    * @param {string} value The cookie value
    * @param {Object} [options={}] The options
    *
-   * @return {OctoResponse}
+   * @return {Response}
    */
   setCookie(name, value, options = {}) {
     this.response.setCookie(name, value, options);
@@ -81,7 +83,7 @@ class OctoResponse {
    * @param {string} name The cookie name
    * @param {Object} [options={}] The cookie options
    *
-   * @return {OctoResponse}
+   * @return {Response}
    */
   clearCookie(name, options = {}) {
     this.response.clearCookie(name, options);
@@ -97,7 +99,7 @@ class OctoResponse {
    * @param {Object|Function} [optionsOrCallback={}] The download options or a callback
    * @param {function(err: Error)} callback Callback with error if the file errors
    *
-   * @return {OctoResponse}
+   * @return {Response}
    */
   download(filePath, filename = '', optionsOrCallback = {}, callback = () => {}) {
     let downloadName = filename;
@@ -113,7 +115,7 @@ class OctoResponse {
    *
    * @param {Object|Array} value The object or array to send as JSON
    *
-   * @return {OctoResponse}
+   * @return {Response}
    */
   json(value) {
     this.response.json(value);
@@ -126,7 +128,7 @@ class OctoResponse {
    *
    * @param {Object|Array} value The object or array to send as JSON
    *
-   * @return {OctoResponse}
+   * @return {Response}
    */
   jsonp(value) {
     this.response.jsonp(value);
@@ -140,7 +142,7 @@ class OctoResponse {
    * @param {string} urlOrPath The URL or path to redirect to
    * @param {number} [status] The status code to send
    *
-   * @return {OctoResponse}
+   * @return {Response}
    */
   redirect(urlOrPath, status = 302) {
     this.response.redirect(status, urlOrPath);
@@ -157,7 +159,7 @@ class OctoResponse {
    *                                                        one and the HTML which can be used as
    *                                                        the response body
    *
-   * @return {OctoResponse}
+   * @return {Response}
    */
   render(view, data = {}, callback = undefined) {
     // assign (override) the data to the default data
@@ -174,7 +176,7 @@ class OctoResponse {
    *
    * @param {string|Object|Array} body The content to send as the response body
    *
-   * @return {OctoResponse}
+   * @return {Response}
    */
   send(body) {
     this.response.send(body);
@@ -189,7 +191,7 @@ class OctoResponse {
    * @param {Object} [options] The options
    * @param {function(err: Error)} [callback] The callback containing an error if there is one
    *
-   * @return {OctoResponse}
+   * @return {Response}
    */
   sendFile(filePath, options = {}, callback = () => {}) {
     this.response.sendFile(filePath, options, callback);
@@ -202,9 +204,9 @@ class OctoResponse {
    *
    * @param {number} value The status code
    *
-   * @return {OctoResponse}
+   * @return {Response}
    */
-  status(value) {
+  setStatus(value) {
     this.response.status(value);
 
     return this;
@@ -224,9 +226,9 @@ class OctoResponse {
    *
    * @param {string} type The type
    *
-   * @return {OctoResponse}
+   * @return {Response}
    */
-  type(type) {
+  setResponseType(type) {
     this.response.type(type);
 
     return this;
@@ -242,4 +244,4 @@ class OctoResponse {
   }
 }
 
-export default OctoResponse;
+export default Response;

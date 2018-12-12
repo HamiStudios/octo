@@ -1,148 +1,53 @@
-// npm
+// node
 import fs from 'fs';
 import path from 'path';
 import https from 'https';
-import assign from 'circle-assign';
+
+// npm
+import { merge as assign } from 'o';
 import express from 'express';
 
-// lib
-import OctoRouter from './Router';
-import OctoRoute from './Route';
-import OctoMiddleware from './Middleware';
-import OctoErrorHandler from './ErrorHandler';
-
-// enums
+// octo
 import OctoProtocol from './enums/Protocol';
 
-// util
-import ServerHelper from './util/ServerHelper';
-
-// errors
-import NoModule from './errors/NoModule';
-
 class Server {
-  constructor(options) {
-    /**
-     * @typedef defaultServerOptions
-     * @type {Object}
-     *
-     * @property {OctoProtocol} protocol The protocol the server should use
-     * @property {string} host The host the server should use
-     * @property {number} port The port the server should use
-     * @property {Object} ssl The SSL options the server should use
-     * @property {boolean} ssl.enabled Whether or not the server should use SSL
-     * @property {string} ssl.certificate The path to the certificate
-     * @property {string} ssl.privateKey The path to the key
-     */
-    this.defaultServerOptions = {
-      protocol: OctoProtocol.HTTP,
-      host: 'localhost',
-      port: 8585,
-      ssl: {
-        enabled: false,
-        certificate: null,
-        privateKey: null,
-      },
-    };
+  /**
+   * @typedef defaultOptions
+   * @type {Object}
+   *
+   * @property {OctoProtocol} protocol The protocol the server should use
+   * @property {string} host The host the server should use
+   * @property {number} port The port the server should use
+   * @property {Object} ssl The SSL options the server should use
+   * @property {boolean} ssl.enabled Whether or not the server should use SSL
+   * @property {string} ssl.certificate The path to the certificate
+   * @property {string} ssl.privateKey The path to the key
+   */
+  static defaultOptions = {
+    protocol: OctoProtocol.HTTP,
+    port: 6262,
+    host: '127.0.0.1',
+  };
 
-    this.options = assign(this.defaultServerOptions, options);
-    this.routers = [];
-    this.routes = [];
-    this.middlewares = [];
-    this.errorHandlers = [];
+  /**
+   * Create a new OctoServer instance
+   *
+   * @param {defaultOptions} options The server options
+   */
+  constructor(options) {
+    this.options = assign(Server.defaultOptions, options);
 
     // create an express app
     this.expressApp = express();
   }
 
   /**
-   * Define a new router
+   * Get the express app instance
    *
-   * @param {OctoRouter} router The router instance
-   *
-   * @return {boolean} Whether or not it was successfully added
+   * @return {Object} The express app instance
    */
-  router(router) {
-    if (router instanceof OctoRouter) {
-      this.routers.push(router);
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Define a new route
-   *
-   * @param {string} routePath The route path
-   * @param {OctoRoute} instance The route instance
-   *
-   * @return {boolean} Whether or not it was successfully added
-   */
-  route(routePath, instance) {
-    const Instance = instance;
-
-    if (new Instance() instanceof OctoRoute) {
-      this.routes.push({
-        routePath,
-        Instance,
-      });
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Define a new middleware
-   *
-   * @param {OctoMiddleware} instance The middleware instance
-   * @param {boolean} [afterRoutes=false] Whether or not the middleware should run before or after
-   *                                      all the necessary routes are ran
-   *
-   * @return {boolean} Whether or not it was successfully added
-   */
-  middleware(instance, afterRoutes = false) {
-    const Instance = instance;
-
-    if (new Instance() instanceof OctoMiddleware) {
-      this.middlewares.push({
-        afterRoutes,
-        Instance,
-      });
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Define a new error handler
-   *
-   * @param {string|OctoErrorHandler} pathOrInstance The path to use or error handler instance
-   * @param {OctoErrorHandler} [instance=null] The error handler instance
-   *
-   * @return {boolean} Whether or not it was successfully added
-   */
-  errorHandler(pathOrInstance, instance = null) {
-    let Instance = instance;
-    let routePath = null;
-
-    if (typeof pathOrInstance === 'string') {
-      routePath = pathOrInstance;
-    } else {
-      Instance = pathOrInstance;
-    }
-
-    if (instance !== null && new Instance() instanceof OctoErrorHandler) {
-      Instance = instance;
-    }
-
-    if (new Instance() instanceof OctoErrorHandler) {
-      this.errorHandlers.push({
-        routePath,
-        Instance,
-      });
-      return true;
-    }
-    return false;
+  getExpressApp() {
+    return this.expressApp;
   }
 
   /**
@@ -194,7 +99,7 @@ class Server {
         return modulePath;
       }
 
-      throw NoModule(module);
+      throw new Error(`The module '${module}' either doesn't exist or is not installed. Failed to serve '${module}' as static files.`)
     };
 
     const serve = (module, modulePath) => {
@@ -243,62 +148,56 @@ class Server {
   }
 
   /**
-   * Start the server
+   * Setup body data parsing
    *
-   * @param {function(listener: Socket)} [callback] Callback which is called once the server
-   *                                                is listening and with the listener
+   * @param {object} urlEncodedOptions = {} Custom options to pass to urlencoded
    */
-  start(callback = () => {}) {
-    // enable body parsing
-    this.expressApp.use(express.json());
-    this.expressApp.use(express.urlencoded({
+  parseBodyData(urlEncodedOptions = {}) {
+    const options = assign({
       extended: true,
-    }));
+    }, urlEncodedOptions);
 
-    // add the middlewares which run before the routes to the express app
-    ServerHelper.addMiddlewares(
-      this.expressApp,
-      this.middlewares.filter(mw => mw.afterRoutes === false),
-    );
+    this.expressApp.use(express.json());
+    this.expressApp.use(express.urlencoded(options));
+  }
 
-    // add the routes to the express app
-    ServerHelper.addRoutes(this.expressApp, this.routes);
-
-    // add the routers to the express app
-    ServerHelper.addRouters(this.expressApp, this.routers);
-
-    // add the middlewares which run after the routes to the express app
-    ServerHelper.addMiddlewares(
-      this.expressApp,
-      this.middlewares.filter(mw => mw.afterRoutes === true),
-    );
-
-    // add error handlers to the express app
-    ServerHelper.addErrorHandlers(this.expressApp, this.errorHandlers);
-
+  /**
+   * Start the express server
+   *
+   * @return {Socket} The listening socket
+   */
+  async boot() {
     // check whether ssl is enabled and the private key and certificate paths exist
-    const privateKeyPath = this.options.ssl.privateKey;
-    const certificatePath = this.options.ssl.certificate;
+    if (this.options.ssl
+        && this.options.ssl !== undefined) {
 
-    if (this.options.ssl.enabled && privateKeyPath !== null && certificatePath !== null) {
-      // get private key and certificate
-      const privateKey = fs.readFileSync(privateKeyPath);
-      const certificate = fs.readFileSync(certificatePath);
+      if (this.options.ssl.privateKey !== null
+          && this.options.ssl.certificate !== null
+          && this.options.ssl.privateKey !== undefined
+          && this.options.ssl.certificate !== undefined) {
+        const privateKeyPath = this.options.ssl.privateKey;
+        const certificatePath = this.options.ssl.certificate;
 
-      // start a https server
-      https.createServer({
-        key: privateKey,
-        cert: certificate,
-      }, this.expressApp).listen(this.options.port, this.options.host, () => {
-        if (typeof callback === 'function') callback(this.serverListener);
-      });
+        // get private key and certificate
+        const ssl = {
+          key: fs.readFileSync(privateKeyPath),
+          cert: fs.readFileSync(certificatePath),
+        };
+
+        // start a https server
+        this.serverListener = await https
+          .createServer(ssl, this.expressApp)
+          .listen(this.options.port, this.options.host);
+      } else {
+        throw new Error('You must specify the SSL key & certificate file paths when SSL is enabled');
+      }
     } else {
       // start a http server
-      this.serverListener = this.expressApp
-        .listen(this.options.port, this.options.host, () => {
-          if (typeof callback === 'function') callback(this.serverListener);
-        });
+      this.serverListener = await this.expressApp
+        .listen(this.options.port, this.options.host);
     }
+
+    return this.serverListener;
   }
 }
 
