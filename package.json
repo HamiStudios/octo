@@ -9,8 +9,7 @@
     "build": "npm-run-all clean build:babel",
     "build:watch": "babel src -d lib --watch",
     "test:eslint": "eslint src tests",
-    "test:jest": "./node_modules/.bin/jest --coverage --verbose",
-    "test": "npm-run-all test:eslint test:jest",
+    "test": "npm-run-all test:eslint",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
   },
   "repository": {
