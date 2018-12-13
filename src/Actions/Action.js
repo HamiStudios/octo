@@ -1,8 +1,8 @@
-class Action {
+class OctoAction {
   /**
    * Create a new OctoAction instance
    *
-   * @param {Context} context The request context
+   * @param {OctoContext} context The request context
    */
   constructor(context) {
     this.ctx = context;
@@ -16,7 +16,7 @@ class Action {
   /**
    * Get the OctoRequest instance
    *
-   * @return {Request}
+   * @return {OctoRequest}
    */
   getRequest() {
     return this.ctx.getRequest();
@@ -25,7 +25,7 @@ class Action {
   /**
    * Get the OctoResponse instance
    *
-   * @return {Response}
+   * @return {OctoResponse}
    */
   getResponse() {
     return this.ctx.getResponse();
@@ -43,11 +43,11 @@ class Action {
   /**
    * Get the raw context
    *
-   * @return {Context}
+   * @return {OctoContext}
    */
   getContext() {
     return this.ctx;
   }
 }
 
-export default Action;
+export default OctoAction;
