@@ -2,11 +2,11 @@
 import { merge as assign } from 'o';
 
 // octo
-import RouteHandler from './RouteHandler';
-import Router from './Router';
-import Route from './Actions/Route';
-import Operation from './Actions/Operation';
-import ErrorHandler from './Actions/ErrorHandler';
+import OctoRouteHandler from './RouteHandler';
+import OctoRouter from './Router';
+import OctoRoute from './Actions/Route';
+import OctoOperation from './Actions/Operation';
+import OctoErrorHandler from './Actions/ErrorHandler';
 
 // package
 import Package from '../package';
@@ -32,7 +32,7 @@ class OctoApp {
     /**
      * @private
      */
-    this.routeHandler = new RouteHandler();
+    this.routeHandler = new OctoRouteHandler();
   }
 
   /**
@@ -112,7 +112,7 @@ class OctoApp {
    * @return {boolean} Whether or not it was added
    */
   addRouter(router) {
-    if (Router.isRouter(router)) {
+    if (OctoRouter.isRouter(router)) {
       const instances = router.getInstances();
       const count = this.routeHandler.instances.length;
 
@@ -154,18 +154,18 @@ class OctoApp {
   /**
    * Start the app
    *
-   * @param {Server} server The server to start
+   * @param {OctoServer} server The server to start
    */
   async start(server) {
     this.init(server);
 
     this.routeHandler.getInstances().forEach((Instance) => {
-      if (Route.isRoute(Instance)) {
+      if (OctoRoute.isRoute(Instance)) {
         // add the route to the express app
-        Route.attach(server.getExpressApp(), Instance);
-      } else if (Operation.isOperation(Instance)) {
+        OctoRoute.attach(server.getExpressApp(), Instance);
+      } else if (OctoOperation.isOperation(Instance)) {
         // add the operator to the express app
-        Operation.attach(server.getExpressApp(), Instance);
+        OctoOperation.attach(server.getExpressApp(), Instance);
       }
     });
 
@@ -179,7 +179,7 @@ class OctoApp {
 
     this.routeHandler.getErrorHandlers().forEach((Instance) => {
       // add the error handler to the express app
-      ErrorHandler.attach(server.getExpressApp(), Instance);
+      OctoErrorHandler.attach(server.getExpressApp(), Instance);
     });
 
     return server.boot();
