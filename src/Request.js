@@ -1,27 +1,30 @@
 // octo
-import RequestBody from './RequestBody';
-import RequestParams from './RequestParams';
-import RequestQuery from './RequestQuery';
-import Method from './enums/Method';
-import Protocol from './enums/Protocol';
+import OctoRequestBody from './RequestBody';
+import OctoRequestParams from './RequestParams';
+import OctoRequestQuery from './RequestQuery';
+import OctoMethod from './enums/Method';
+import OctoProtocol from './enums/Protocol';
 
-class Request {
+class OctoRequest {
   /**
    * Create a new OctoRequest instance
    *
    * @param {Object} request An express request object
    */
   constructor(request) {
+    /**
+     * @private
+     */
     this.request = request;
   }
 
   /**
    * Get the request body
    *
-   * @return {RequestBody} An OctoRequestBody instance
+   * @return {OctoRequestBody} An OctoRequestBody instance
    */
   getBody() {
-    return new RequestBody(this.request.body);
+    return new OctoRequestBody(this.request.body);
   }
 
   /**
@@ -48,7 +51,7 @@ class Request {
    * @return {OctoMethod} The request method
    */
   getMethod() {
-    return Method.valueOf(this.request.method);
+    return OctoMethod.valueOf(this.request.method);
   }
 
   /**
@@ -63,10 +66,10 @@ class Request {
   /**
    * Get the request params
    *
-   * @return {RequestParams} The request params
+   * @return {OctoRequestParams} The request params
    */
   getParams() {
-    return new RequestParams(this.request.params);
+    return new OctoRequestParams(this.request.params);
   }
 
   /**
@@ -84,16 +87,16 @@ class Request {
    * @return {OctoProtocol} The request protocol
    */
   getProtocol() {
-    return Protocol.valueOf(this.request.protocol);
+    return OctoProtocol.valueOf(this.request.protocol);
   }
 
   /**
    * Get the request query
    *
-   * @return {RequestQuery} The request query
+   * @return {OctoRequestQuery} The request query
    */
   getQuery() {
-    return new RequestQuery(this.request.query);
+    return new OctoRequestQuery(this.request.query);
   }
 
   /**
@@ -153,4 +156,4 @@ class Request {
   }
 }
 
-export default Request;
+export default OctoRequest;
