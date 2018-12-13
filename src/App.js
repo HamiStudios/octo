@@ -8,23 +8,50 @@ import Route from './Actions/Route';
 import Operation from './Actions/Operation';
 import ErrorHandler from './Actions/ErrorHandler';
 
-class App {
-  // set the default OctoApp options
+// package
+import Package from '../package';
+
+class OctoApp {
   static defaultOptions = {
-    sendPoweredBy: true,
+    sendSoftwareHeader: true,
   };
 
   /**
    * Create a new OctoApp instance
    *
-   * @param {object} options = {} The custom options to set
+   * @param {Object} options = {} The custom options to set
    */
   constructor(options = {}) {
     // merge the options onto the default options
-    this.options = assign(App.defaultOptions, options);
+    /**
+     * @private
+     */
+    this.options = assign(OctoApp.defaultOptions, options);
 
     // create a new route handler
+    /**
+     * @private
+     */
     this.routeHandler = new RouteHandler();
+  }
+
+  /**
+   * Setup the server
+   *
+   * @private
+   *
+   * @param {OctoServer} server The server to setup
+   */
+  init(server) {
+    if (this.options.sendSoftwareHeader) {
+      const header = `Octo/${Package.version} & Express`;
+      server.getExpressApp().use((request, response, next) => {
+        response.setHeader('X-Powered-By', header);
+        next();
+      });
+    } else {
+      server.getExpressApp().disable('x-powered-by');
+    }
   }
 
   /**
@@ -130,6 +157,8 @@ class App {
    * @param {Server} server The server to start
    */
   async start(server) {
+    this.init(server);
+
     this.routeHandler.getInstances().forEach((Instance) => {
       if (Route.isRoute(Instance)) {
         // add the route to the express app
@@ -157,4 +186,4 @@ class App {
   }
 }
 
-export default App;
+export default OctoApp;
