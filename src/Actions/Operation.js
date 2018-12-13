@@ -1,14 +1,14 @@
 // octo
-import Action from './Action';
+import OctoAction from './Action';
 import { hasFunction, hasProp } from '../internals';
-import Method from '../enums/Method';
-import Context from '../Context';
+import OctoMethod from '../enums/Method';
+import OctoContext from '../Context';
 
-class Operation extends Action {
+class OctoOperation extends OctoAction {
   /**
    * Check whether the action is an OctoOperation
    *
-   * @param {Operation} Instance The operation to check
+   * @param {OctoOperation} Instance The operation to check
    *
    * @return {boolean} Whether or not it is an OctoOperation
    */
@@ -17,7 +17,7 @@ class Operation extends Action {
 
     return Instance !== undefined
       && Instance !== null
-      && instance instanceof Operation
+      && instance instanceof OctoOperation
       && hasProp(Instance, 'method', 'string', true)
       && hasProp(Instance, 'path', 'string', false)
       && hasFunction(instance, 'execute', true);
@@ -27,12 +27,12 @@ class Operation extends Action {
    * Attach the specified operation to the express server
    *
    * @param {Object} expressApp The express app instance
-   * @param {Operation} Instance The operation to attach
+   * @param {OctoOperation} Instance The operation to attach
    */
   static attach(expressApp, Instance) {
-    const bind = (methods = Method.values()) => {
+    const bind = (methods = OctoMethod.values()) => {
       const callback = async (request, response, next) => {
-        const context = new Context(request, response, next);
+        const context = new OctoContext(request, response, next);
 
         if (methods.indexOf(context.getRequest().getMethod()) > -1) {
           const instance = new Instance(context);
@@ -64,4 +64,4 @@ class Operation extends Action {
   }
 }
 
-export default Operation;
+export default OctoOperation;
