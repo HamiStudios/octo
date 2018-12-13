@@ -10,7 +10,7 @@ import express from 'express';
 // octo
 import OctoProtocol from './enums/Protocol';
 
-class Server {
+class OctoServer {
   /**
    * @typedef defaultOptions
    * @type {Object}
@@ -35,9 +35,15 @@ class Server {
    * @param {defaultOptions} options The server options
    */
   constructor(options) {
-    this.options = assign(Server.defaultOptions, options);
+    /**
+     * @private
+     */
+    this.options = assign(OctoServer.defaultOptions, options);
 
     // create an express app
+    /**
+     * @private
+     */
     this.expressApp = express();
   }
 
@@ -201,4 +207,4 @@ class Server {
   }
 }
 
-export default Server;
+export default OctoServer;
