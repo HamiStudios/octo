@@ -1,7 +1,7 @@
 // npm
 import * as o from 'o';
 
-class RequestBody {
+class OctoRequestBody {
   /**
    * Create a new OctoRequestBody instance
    *
@@ -64,4 +64,4 @@ class RequestBody {
   }
 }
 
-export default RequestBody;
+export default OctoRequestBody;
