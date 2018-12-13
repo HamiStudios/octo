@@ -1,9 +1,9 @@
 // octo
-import Route from './Actions/Route';
-import Operation from './Actions/Operation';
-import ErrorHandler from './Actions/ErrorHandler';
+import OctoRoute from './Actions/Route';
+import OctoOperation from './Actions/Operation';
+import OctoErrorHandler from './Actions/ErrorHandler';
 
-class RouteHandler {
+class OctoRouteHandler {
   /**
    * Create a new OctoRouteHandler instance
    */
@@ -14,25 +14,25 @@ class RouteHandler {
   /**
    * Check whether the instance is a OctoRoute or OctoOperation
    *
-   * @param {Route|Operation|ErrorHandler} instance The instance to check
+   * @param {OctoRoute|OctoOperation|OctoErrorHandler} instance The instance to check
    *
    * @return {boolean} Whether or not it is an instance
    */
   static validate(instance = null) {
-    return Route.isRoute(instance)
-      || Operation.isOperation(instance)
-      || ErrorHandler.isHandler(instance);
+    return OctoRoute.isRoute(instance)
+      || OctoOperation.isOperation(instance)
+      || OctoErrorHandler.isHandler(instance);
   }
 
   /**
    * Add a new OctoRoute or OctoOperation to the app
    *
-   * @param {Route|Operation|ErrorHandler} instance
+   * @param {OctoRoute|OctoOperation|OctoErrorHandler} instance
    *
    * @return {boolean} Whether or not it was added
    */
   add(instance) {
-    if (RouteHandler.validate(instance)) {
+    if (OctoRouteHandler.validate(instance)) {
       this.instances.push(instance);
       return true;
     }
@@ -43,31 +43,31 @@ class RouteHandler {
   /**
    * Get all the routes
    *
-   * @return {Route[]} An array of routes
+   * @return {OctoRoute[]} An array of routes
    */
   getRoutes() {
     return this.instances
-      .filter(i => Route.isRoute(i));
+      .filter(i => OctoRoute.isRoute(i));
   }
 
   /**
    * Get all the operations
    *
-   * @return {Operation[]} An array of operations
+   * @return {OctoOperation[]} An array of operations
    */
   getOperations() {
     return this.instances
-      .filter(i => Operation.isOperation(i));
+      .filter(i => OctoOperation.isOperation(i));
   }
 
   /**
    * Get all the error handlers
    *
-   * @return {ErrorHandler[]} An array of error handlers
+   * @return {OctoErrorHandler[]} An array of error handlers
    */
   getErrorHandlers() {
     return this.instances
-      .filter(i => ErrorHandler.isHandler(i));
+      .filter(i => OctoErrorHandler.isHandler(i));
   }
 
   /**
@@ -80,4 +80,4 @@ class RouteHandler {
   }
 }
 
-export default RouteHandler;
+export default OctoRouteHandler;
