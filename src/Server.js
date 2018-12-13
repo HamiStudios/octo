@@ -12,7 +12,7 @@ import OctoProtocol from './enums/Protocol';
 
 class OctoServer {
   /**
-   * @typedef {Object} DefaultOptions
+   * @typedef {Object} ServerOptions
    *
    * @property {OctoProtocol} protocol The protocol the server should use
    * @property {string} host The host the server should use
@@ -22,7 +22,7 @@ class OctoServer {
    * @property {string} ssl.certificate The path to the certificate
    * @property {string} ssl.privateKey The path to the key
    */
-  static defaultOptions = {
+  static ServerOptions = {
     protocol: OctoProtocol.HTTP,
     port: 6262,
     host: '127.0.0.1',
@@ -31,14 +31,14 @@ class OctoServer {
   /**
    * Create a new OctoServer instance
    *
-   * @param {DefaultOptions} options The server options
+   * @param {ServerOptions} options The server options
    */
   constructor(options) {
     /**
      * @private
-     * @type DefaultOptions
+     * @type ServerOptions
      */
-    this.options = assign(OctoServer.defaultOptions, options);
+    this.options = assign(OctoServer.ServerOptions, options);
 
     // create an express app
     /**
