@@ -1,7 +1,7 @@
 // octo
-import RouteHandler from './RouteHandler';
+import OctoRouteHandler from './RouteHandler';
 
-class Router {
+class OctoRouter {
   /**
    * Create a new OctoRouter instance
    *
@@ -12,13 +12,13 @@ class Router {
     this.basePath = basePath;
 
     // create a new route handler
-    this.routeHandler = new RouteHandler();
+    this.routeHandler = new OctoRouteHandler();
   }
 
   /**
    * Check whether the router is an OctoRouter
    *
-   * @param {Router} router The router to check
+   * @param {OctoRouter} router The router to check
    *
    * @return {boolean} Whether or not it is an OctoRouter
    */
@@ -40,7 +40,7 @@ class Router {
   /**
    * Add a route to the router
    *
-   * @param {Route} route The route to add
+   * @param {OctoRoute} route The route to add
    *
    * @throws {Error} throws when the route can't be added
    *
@@ -56,7 +56,7 @@ class Router {
   /**
    * Add an operation to the router
    *
-   * @param {Operation} operation The operation to add
+   * @param {OctoOperation} operation The operation to add
    *
    * @throws {Error} throws when the operation can't be added
    *
@@ -72,7 +72,7 @@ class Router {
   /**
    * Add an error handler to the router
    *
-   * @param {ErrorHandler} handler The handler to add
+   * @param {OctoErrorHandler} handler The handler to add
    *
    * @throws {Error} throws when the handler can't be added
    *
@@ -88,7 +88,7 @@ class Router {
   /**
    * Get all the routes
    *
-   * @return {Route[]} An array of routes
+   * @return {OctoRoute[]} An array of routes
    */
   getRoutes() {
     return this.routeHandler.getRoutes();
@@ -97,7 +97,7 @@ class Router {
   /**
    * Get all the operations
    *
-   * @return {Operation[]} An array of operations
+   * @return {OctoOperation[]} An array of operations
    */
   getOperations() {
     return this.routeHandler.getOperations();
@@ -106,7 +106,7 @@ class Router {
   /**
    * Get all the error handlers
    *
-   * @return {ErrorHandler[]} An array of error handlers
+   * @return {OctoErrorHandler[]} An array of error handlers
    */
   getErrorHandlers() {
     return this.routeHandler.getErrorHandlers();
@@ -122,4 +122,4 @@ class Router {
   }
 }
 
-export default Router;
+export default OctoRouter;
