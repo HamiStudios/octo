@@ -1,7 +1,7 @@
+// npm
 import * as o from 'o';
 
-
-class RequestParams {
+class OctoRequestParams {
   /**
    * Create a new OctoRequestParams instance
    *
@@ -65,4 +65,4 @@ class RequestParams {
   }
 }
 
-export default RequestParams;
+export default OctoRequestParams;
