@@ -4,7 +4,7 @@ import path from 'path';
 // npm
 import { merge as assign } from 'o';
 
-class Response {
+class OctoResponse {
   /**
    * Create a new OctoResponse instance
    *
@@ -29,7 +29,7 @@ class Response {
    * @param {string} name The header name
    * @param {string} value The header value
    *
-   * @return {Response}
+   * @return {OctoResponse}
    */
   addHeader(name, value) {
     this.response.append(name, value);
@@ -53,7 +53,7 @@ class Response {
    *
    * @param {string} [filePath] The path to the file to attach
    *
-   * @return {Response}
+   * @return {OctoResponse}
    */
   attachment(filePath = '') {
     if (filePath === '') this.response.attachment();
@@ -69,7 +69,7 @@ class Response {
    * @param {string} value The cookie value
    * @param {Object} [options={}] The options
    *
-   * @return {Response}
+   * @return {OctoResponse}
    */
   setCookie(name, value, options = {}) {
     this.response.setCookie(name, value, options);
@@ -83,7 +83,7 @@ class Response {
    * @param {string} name The cookie name
    * @param {Object} [options={}] The cookie options
    *
-   * @return {Response}
+   * @return {OctoResponse}
    */
   clearCookie(name, options = {}) {
     this.response.clearCookie(name, options);
@@ -99,7 +99,7 @@ class Response {
    * @param {Object|Function} [optionsOrCallback={}] The download options or a callback
    * @param {function(err: Error)} callback Callback with error if the file errors
    *
-   * @return {Response}
+   * @return {OctoResponse}
    */
   download(filePath, filename = '', optionsOrCallback = {}, callback = () => {}) {
     let downloadName = filename;
@@ -115,7 +115,7 @@ class Response {
    *
    * @param {Object|Array} value The object or array to send as JSON
    *
-   * @return {Response}
+   * @return {OctoResponse}
    */
   json(value) {
     this.response.json(value);
@@ -128,7 +128,7 @@ class Response {
    *
    * @param {Object|Array} value The object or array to send as JSON
    *
-   * @return {Response}
+   * @return {OctoResponse}
    */
   jsonp(value) {
     this.response.jsonp(value);
@@ -142,7 +142,7 @@ class Response {
    * @param {string} urlOrPath The URL or path to redirect to
    * @param {number} [status] The status code to send
    *
-   * @return {Response}
+   * @return {OctoResponse}
    */
   redirect(urlOrPath, status = 302) {
     this.response.redirect(status, urlOrPath);
@@ -159,7 +159,7 @@ class Response {
    *                                                        one and the HTML which can be used as
    *                                                        the response body
    *
-   * @return {Response}
+   * @return {OctoResponse}
    */
   render(view, data = {}, callback = undefined) {
     // assign (override) the data to the default data
@@ -176,7 +176,7 @@ class Response {
    *
    * @param {string|Object|Array} body The content to send as the response body
    *
-   * @return {Response}
+   * @return {OctoResponse}
    */
   send(body) {
     this.response.send(body);
@@ -191,7 +191,7 @@ class Response {
    * @param {Object} [options] The options
    * @param {function(err: Error)} [callback] The callback containing an error if there is one
    *
-   * @return {Response}
+   * @return {OctoResponse}
    */
   sendFile(filePath, options = {}, callback = () => {}) {
     this.response.sendFile(filePath, options, callback);
@@ -204,7 +204,7 @@ class Response {
    *
    * @param {number} value The status code
    *
-   * @return {Response}
+   * @return {OctoResponse}
    */
   setStatus(value) {
     this.response.status(value);
@@ -226,7 +226,7 @@ class Response {
    *
    * @param {string} type The type
    *
-   * @return {Response}
+   * @return {OctoResponse}
    */
   setResponseType(type) {
     this.response.type(type);
@@ -244,4 +244,4 @@ class Response {
   }
 }
 
-export default Response;
+export default OctoResponse;
