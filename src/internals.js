@@ -1,7 +1,7 @@
 /**
  * Check if the instance prop is of the specified type
  *
- * @param {Route|Operation|ErrorHandler} instance The instance to check
+ * @param {OctoRoute|OctoOperation|OctoErrorHandler} instance The instance to check
  * @param {string} name The prop name
  * @param {string} type The type to match
  * @param {boolean} canBeArray Whether it can be an array
@@ -36,7 +36,7 @@ function hasProp(instance, name, type, canBeArray = false, required = false) {
 /**
  * Check if instance has the specified function
  *
- * @param {Route|Operation|ErrorHandler} instance The instance to check
+ * @param {OctoRoute|OctoOperation|OctoErrorHandler} instance The instance to check
  * @param {string} name The name of the function
  * @param {boolean} required Whether it is required
  *
