@@ -1,4 +1,4 @@
-class RequestQuery {
+class OctoRequestQuery {
   /**
    * Create a new OctoRequestQuery instance
    *
@@ -45,4 +45,4 @@ class RequestQuery {
   }
 }
 
-export default RequestQuery;
+export default OctoRequestQuery;
