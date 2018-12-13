@@ -1,5 +1,6 @@
 // npm
-import { merge as assign } from 'o';
+import { merge as assign, is as isObject } from 'o';
+import helmet from 'helmet';
 
 // octo
 import OctoRouteHandler from './RouteHandler';
@@ -12,21 +13,33 @@ import OctoErrorHandler from './Actions/ErrorHandler';
 import Package from '../package';
 
 class OctoApp {
-  static defaultOptions = {
+  /**
+   * @typedef {Object} AppOptions
+   *
+   * @property {boolean} sendSoftwareHeader Whether to send the X-Powered-By header (helmet must
+   *                                        be enabled)
+   * @property {Object|boolean} helmet See https://github.com/helmetjs/helmet
+   * @property {string[]} [helmet.modules] An array of modules to enable
+   * @property {Object} [helmet.options] The options to pass to helmet (only when modules isn't
+   *                                     defined)
+   */
+  static AppOptions = {
     sendSoftwareHeader: true,
+    helmet: true,
   };
 
   /**
    * Create a new OctoApp instance
    *
-   * @param {Object} options = {} The custom options to set
+   * @param {AppOptions} options = {} The custom options to set
    */
   constructor(options = {}) {
     // merge the options onto the default options
     /**
      * @private
+     * @type AppOptions
      */
-    this.options = assign(OctoApp.defaultOptions, options);
+    this.options = assign(OctoApp.AppOptions, options);
 
     // create a new route handler
     /**
@@ -43,14 +56,47 @@ class OctoApp {
    * @param {OctoServer} server The server to setup
    */
   init(server) {
-    if (this.options.sendSoftwareHeader) {
-      const header = `Octo/${Package.version} & Express`;
-      server.getExpressApp().use((request, response, next) => {
-        response.setHeader('X-Powered-By', header);
-        next();
-      });
-    } else {
-      server.getExpressApp().disable('x-powered-by');
+    // if options.helmet is an object or is enabled
+    if (isObject(this.options.helmet) || this.options.helmet === true) {
+      // if options.helmet.modules is an array
+      if (Array.isArray(this.options.helmet.modules)) {
+        // loop over the modules and enable them
+        this.options.helmet.modules.forEach((module) => {
+          const moduleMiddleware = helmet[module];
+
+          if (typeof moduleMiddleware === 'function') {
+            // add the module as a middleware to the express app
+            server.getExpressApp().use(moduleMiddleware());
+          } else {
+            throw new Error('App options (helmet.modules) contains an invalid module name. Please refer to https://helmetjs.github.io/docs/ for a list of modules');
+          }
+        });
+      } else {
+        // if options.helmet.modules isn't defined or isn't an array enable helmet as default
+        // check if options.helmet.options is defined, if it is an it is an object use it for
+        // the helmet options
+        const helmetOptions = isObject(this.options.helmet.options)
+          ? this.options.helmet.options
+          : null;
+
+        // add the default helmet middlware using the options if defined
+        server.getExpressApp().use(helmet(helmetOptions));
+      }
+
+      // if options.sendSoftwareHeader is true set the X-Powered-By header
+      // to "Octo/{version} & Express"
+      if (this.options.sendSoftwareHeader) {
+        // format the header
+        const header = `Octo/${Package.version} & Express`;
+
+        // set the header using helmet
+        server.getExpressApp().use(helmet.hidePoweredBy({
+          setTo: header,
+        }));
+      } else {
+        // if it isn't enabled disable it using helmet
+        server.getExpressApp().use(helmet.hidePoweredBy());
+      }
     }
   }
 
