@@ -1,8 +1,8 @@
+// octo
 import OctoRequest from './Request';
 import OctoResponse from './Response';
 
-
-class Context {
+class OctoContext {
   /**
    * Create a new OctoContext which holds the express request
    * and response instances
@@ -85,4 +85,4 @@ class Context {
   }
 }
 
-export default Context;
+export default OctoContext;
