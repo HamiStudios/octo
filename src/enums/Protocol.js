@@ -1,18 +1,18 @@
-const Protocol = Object.freeze({
+const OctoProtocol = Object.freeze({
   HTTP: 'http',
   HTTPS: 'https',
 
   // methods
   values: function values() {
-    return Object.keys(Protocol)
-      .filter(val => typeof Protocol[val] === 'string');
+    return Object.keys(OctoProtocol)
+      .filter(val => typeof OctoProtocol[val] === 'string');
   },
   valueOf: function valueOf(value) {
     const valueUpper = value.toString().toUpperCase();
-    const values = Protocol.values();
+    const values = OctoProtocol.values();
 
-    return values.indexOf(valueUpper) > -1 ? Protocol[valueUpper] : undefined;
+    return values.indexOf(valueUpper) > -1 ? OctoProtocol[valueUpper] : undefined;
   },
 });
 
-export default Protocol;
+export default OctoProtocol;
