@@ -1,14 +1,14 @@
 // octo
-import Action from './Action';
+import OctoAction from './Action';
 import { hasFunction, hasProp } from '../internals';
-import Method from '../enums/Method';
-import Context from '../Context';
+import OctoMethod from '../enums/Method';
+import OctoContext from '../Context';
 
-class ErrorHandler extends Action {
+class OctoErrorHandler extends OctoAction {
   /**
    * Check whether the handler is an OctoErrorHandler
    *
-   * @param {ErrorHandler} Instance The handler to check
+   * @param {OctoErrorHandler} Instance The handler to check
    *
    * @return {boolean} Whether or not it is an OctoErrorHandler
    */
@@ -17,7 +17,7 @@ class ErrorHandler extends Action {
 
     return Instance !== undefined
       && Instance !== null
-      && instance instanceof ErrorHandler
+      && instance instanceof OctoErrorHandler
       && hasProp(Instance, 'error', 'number', true, true)
       && hasProp(Instance, 'method', 'string', true)
       && hasProp(Instance, 'path', 'string', false)
@@ -28,12 +28,12 @@ class ErrorHandler extends Action {
    * Attach the specified handler to the express server
    *
    * @param {Object} expressApp The express app instance
-   * @param {ErrorHandler} Instance The handler to attach
+   * @param {OctoErrorHandler} Instance The handler to attach
    */
   static attach(expressApp, Instance) {
-    const bind = (methods = Method.values()) => {
+    const bind = (methods = OctoMethod.values()) => {
       const callback = async (request, response, next) => {
-        const context = new Context(request, response, next);
+        const context = new OctoContext(request, response, next);
 
         const handleError = async (errors) => {
           if (errors.indexOf(context.getResponse().getStatus()) > -1) {
@@ -75,4 +75,4 @@ class ErrorHandler extends Action {
   }
 }
 
-export default ErrorHandler;
+export default OctoErrorHandler;
