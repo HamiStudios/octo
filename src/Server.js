@@ -12,8 +12,7 @@ import OctoProtocol from './enums/Protocol';
 
 class OctoServer {
   /**
-   * @typedef defaultOptions
-   * @type {Object}
+   * @typedef {Object} DefaultOptions
    *
    * @property {OctoProtocol} protocol The protocol the server should use
    * @property {string} host The host the server should use
@@ -32,11 +31,12 @@ class OctoServer {
   /**
    * Create a new OctoServer instance
    *
-   * @param {defaultOptions} options The server options
+   * @param {DefaultOptions} options The server options
    */
   constructor(options) {
     /**
      * @private
+     * @type DefaultOptions
      */
     this.options = assign(OctoServer.defaultOptions, options);
 
@@ -45,6 +45,11 @@ class OctoServer {
      * @private
      */
     this.expressApp = express();
+
+    /**
+     * @private
+     */
+    this.serverListener = null;
   }
 
   /**
@@ -168,6 +173,66 @@ class OctoServer {
   }
 
   /**
+   * Get the IP the server is bound to
+   *
+   * @return {string} The bound IP address
+   */
+  getBoundIP() {
+    if (this.serverListener !== null) {
+      return this.serverListener.address().address;
+    }
+    throw new Error('Can\'t fetch the bound IP when the server isn\'t listening (you must start the server first)');
+  }
+
+  /**
+   * Get the port the server is bound to
+   *
+   * @return {string} The bound port
+   */
+  getBoundPort() {
+    if (this.serverListener !== null) {
+      return String(this.serverListener.address().port);
+    }
+    throw new Error('Can\'t fetch the bound port when the server isn\'t listening (you must start the server first)');
+  }
+
+  /**
+   * Get the protocol the server is bound to
+   *
+   * @return {string} The bound protocol
+   */
+  getBoundProtocol() {
+    if (this.serverListener !== null) {
+      return String(OctoProtocol.valueOf(this.options.protocol));
+    }
+    throw new Error('Can\'t fetch the bound protocol when the server isn\'t listening (you must start the server first)');
+  }
+
+  /**
+   * Get the full URL to the hosted server
+   *
+   * @return {string} The full URL
+   */
+  getURL() {
+    if (this.serverListener !== null) {
+      return `${this.getBoundProtocol()}://${this.getBoundIP()}:${this.getBoundPort()}`;
+    }
+    throw new Error('Can\'t fetch the URL when the server isn\'t listening (you must start the server first)');
+  }
+
+  /**
+   * Get the TCP server
+   *
+   * @return {net.Server}
+   */
+  getTCPServer() {
+    if (this.serverListener !== null) {
+      return this.serverListener;
+    }
+    throw new Error('Can\'t fetch the server when the server isn\'t listening (you must start the server first)');
+  }
+
+  /**
    * Start the express server
    *
    * @return {Socket} The listening socket
@@ -176,7 +241,6 @@ class OctoServer {
     // check whether ssl is enabled and the private key and certificate paths exist
     if (this.options.ssl
         && this.options.ssl !== undefined) {
-
       if (this.options.ssl.privateKey !== null
           && this.options.ssl.certificate !== null
           && this.options.ssl.privateKey !== undefined
@@ -203,7 +267,21 @@ class OctoServer {
         .listen(this.options.port, this.options.host);
     }
 
-    return this.serverListener;
+    return this;
+  }
+
+  /**
+   * Shutdown the server
+   */
+  shutdown() {
+    return new Promise((resolve) => {
+      if (this.serverListener !== null) {
+        this.serverListener.close(() => {
+          this.serverListener = null;
+          resolve();
+        });
+      }
+    });
   }
 }
 
