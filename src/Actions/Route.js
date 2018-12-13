@@ -1,13 +1,13 @@
 // octo
-import Action from './Action';
+import OctoAction from './Action';
 import { hasProp, hasFunction } from '../internals';
-import Context from '../Context';
+import OctoContext from '../Context';
 
-class Route extends Action {
+class OctoRoute extends OctoAction {
   /**
    * Check whether the route is an OctoRoute
    *
-   * @param {Route} Instance The route to check
+   * @param {OctoRoute} Instance The route to check
    *
    * @return {boolean} Whether or not it is an OctoRoute
    */
@@ -16,7 +16,7 @@ class Route extends Action {
 
     return Instance !== undefined
       && Instance !== null
-      && instance instanceof Route
+      && instance instanceof OctoRoute
       && hasProp(Instance, 'method', 'string', true, true)
       && hasProp(Instance, 'path', 'string', false, true)
       && hasFunction(instance, 'render', true)
@@ -37,7 +37,7 @@ class Route extends Action {
       expressApp[methodFunc](
         Instance.path,
         async (request, response, next) => {
-          const context = new Context(request, response, next);
+          const context = new OctoContext(request, response, next);
           const instance = new Instance(context);
 
           if (instance.before !== undefined) {
@@ -68,4 +68,4 @@ class Route extends Action {
   }
 }
 
-export default Route;
+export default OctoRoute;
