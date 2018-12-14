@@ -12,6 +12,7 @@ class OctoResponse {
    */
   constructor(response) {
     this.response = response;
+    this.renderingView = false;
   }
 
   /**
@@ -162,6 +163,9 @@ class OctoResponse {
    * @return {OctoResponse}
    */
   render(view, data = {}, callback = undefined) {
+    // mark the response as rendering view
+    this.renderingView = true;
+
     // assign (override) the data to the default data
     const locals = assign(this.response.app.defaultRenderData, data);
 
@@ -169,6 +173,16 @@ class OctoResponse {
     else this.response.render(view, locals, callback);
 
     return this;
+  }
+
+  /**
+   * Check if a view is being rendered. This will return true after calling render(). This can be
+   * useful to prevent actions from manipulating the response after calling render().
+   *
+   * @return {boolean} Whether a view is being rendered
+   */
+  isRenderingView() {
+    return this.renderingView;
   }
 
   /**
