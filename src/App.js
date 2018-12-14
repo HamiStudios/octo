@@ -103,7 +103,7 @@ class OctoApp {
   /**
    * Add a route to the app
    *
-   * @param {Route} route The route to add
+   * @param {OctoRoute} route The route to add
    *
    * @throws {Error} throws when the route can't be added
    *
@@ -119,7 +119,7 @@ class OctoApp {
   /**
    * Add an operation to the app
    *
-   * @param {Operation} operation The operation to add
+   * @param {OctoOperation} operation The operation to add
    *
    * @throws {Error} throws when the operation can't be added
    *
@@ -135,7 +135,7 @@ class OctoApp {
   /**
    * Add an error handler to the app
    *
-   * @param {ErrorHandler} handler The handler to add
+   * @param {OctoErrorHandler} handler The handler to add
    *
    * @throws {Error} throws when the handler can't be added
    *
@@ -151,7 +151,7 @@ class OctoApp {
   /**
    * Add a router to the app
    *
-   * @param {Router} router The router to add
+   * @param {OctoRouter} router The router to add
    *
    * @throws {Error} throws when the router can't be added
    *
@@ -173,7 +173,7 @@ class OctoApp {
   /**
    * Get all the routes
    *
-   * @return {Route[]} An array of routes
+   * @return {OctoRoute[]} An array of routes
    */
   getRoutes() {
     return this.routeHandler.getRoutes();
@@ -182,7 +182,7 @@ class OctoApp {
   /**
    * Get all the operations
    *
-   * @return {Operation[]} An array of operations
+   * @return {OctoOperation[]} An array of operations
    */
   getOperations() {
     return this.routeHandler.getOperations();
@@ -191,7 +191,7 @@ class OctoApp {
   /**
    * Get all the error handlers
    *
-   * @return {ErrorHandler[]} An array of error handlers
+   * @return {OctoErrorHandler[]} An array of error handlers
    */
   getErrorHandlers() {
     return this.routeHandler.getErrorHandlers();
