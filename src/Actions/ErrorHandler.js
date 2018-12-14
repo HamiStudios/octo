@@ -51,7 +51,8 @@ class OctoErrorHandler extends OctoAction {
         }
 
         if (!context.getResponse().headersAreSent()
-          && !context.isMovingToNext()) {
+            && !context.getResponse().isRenderingView()
+            && !context.isMovingToNext()) {
           context.getNextHandler()();
         }
       };
