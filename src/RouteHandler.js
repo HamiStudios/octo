@@ -2,6 +2,7 @@
 import OctoRoute from './Actions/Route';
 import OctoOperation from './Actions/Operation';
 import OctoErrorHandler from './Actions/ErrorHandler';
+import OctoRouter from './Router';
 
 class OctoRouteHandler {
   /**
@@ -12,22 +13,23 @@ class OctoRouteHandler {
   }
 
   /**
-   * Check whether the instance is a OctoRoute or OctoOperation
+   * Check whether the instance is a OctoRoute, OctoOperation, OctoErrorHandler or OctoRouter
    *
-   * @param {OctoRoute|OctoOperation|OctoErrorHandler} instance The instance to check
+   * @param {OctoRoute|OctoOperation|OctoErrorHandler|OctoRouter} instance The instance to check
    *
    * @return {boolean} Whether or not it is an instance
    */
   static validate(instance = null) {
-    return OctoRoute.isRoute(instance)
+    return OctoRouter.isRouter(instance)
+      || OctoRoute.isRoute(instance)
       || OctoOperation.isOperation(instance)
       || OctoErrorHandler.isHandler(instance);
   }
 
   /**
-   * Add a new OctoRoute or OctoOperation to the app
+   * Add a new OctoRoute, OctoOperation, OctoErrorHandler or OctoRouter to the app
    *
-   * @param {OctoRoute|OctoOperation|OctoErrorHandler} instance
+   * @param {OctoRoute|OctoOperation|OctoErrorHandler|OctoRouter} instance
    *
    * @return {boolean} Whether or not it was added
    */
@@ -71,9 +73,19 @@ class OctoRouteHandler {
   }
 
   /**
-   * Get all routes, operations and error handlers
+   * Get all routers
    *
-   * @return {*[]} An array of all routes, operations and error handlers
+   * @return {OctoRouter[]} An array of routers
+   */
+  getRouters() {
+    return this.instances
+      .filter(i => OctoRouter.isRouter(i));
+  }
+
+  /**
+   * Get all routes, operations, error handlers and routers
+   *
+   * @return {*[]} An array of all routes, operations, error handlers and routers
    */
   getInstances() {
     return this.instances;

@@ -1,6 +1,7 @@
 // npm
 import { merge as assign, is as isObject } from 'o';
 import helmet from 'helmet';
+import { Router as ExpressRouter } from 'express';
 
 // octo
 import OctoRouteHandler from './RouteHandler';
@@ -158,16 +159,10 @@ class OctoApp {
    * @return {boolean} Whether or not it was added
    */
   addRouter(router) {
-    if (OctoRouter.isRouter(router)) {
-      const instances = router.getInstances();
-      const count = this.routeHandler.instances.length;
+    const added = this.routeHandler.add(router);
 
-      instances.forEach(i => this.routeHandler.add(i));
-
-      return this.routeHandler.instances.length === (count + instances.length);
-    }
-
-    throw new Error(`Failed to add router '${router.prototype.constructor.name}' to app because it isn't an instance of OctoRouter`);
+    if (added) return true;
+    throw new Error(`Failed to add router '${router.prototype.constructor.name}' to the app because it isn't an instance of OctoRouter`);
   }
 
   /**
@@ -198,6 +193,15 @@ class OctoApp {
   }
 
   /**
+   * Get all routers
+   *
+   * @return {OctoRouter[]} An array of routers
+   */
+  getRouters() {
+    return this.routeHandler.getRouters();
+  }
+
+  /**
    * Start the app
    *
    * @param {OctoServer} server The server to start
@@ -205,28 +209,39 @@ class OctoApp {
   async start(server) {
     this.init(server);
 
-    this.routeHandler.getInstances().forEach((Instance) => {
-      if (OctoRoute.isRoute(Instance)) {
-        // add the route to the express app
-        OctoRoute.attach(server.getExpressApp(), Instance);
-      } else if (OctoOperation.isOperation(Instance)) {
-        // add the operator to the express app
-        OctoOperation.attach(server.getExpressApp(), Instance);
-      }
-    });
+    const bindActions = (routeHandler, expressApp) => {
+      routeHandler.getInstances().forEach((Instance) => {
+        if (OctoRouter.isRouter(Instance)) {
+          // add all routes, operations, error handlers and inner routes to the express app
+          const router = new ExpressRouter();
 
-    // add a 404 handler
-    server.getExpressApp().use((request, response, next) => {
-      if (response.statusCode === 200) {
-        response.status(404);
-      }
-      next();
-    });
+          bindActions(Instance.routeHandler, router);
 
-    this.routeHandler.getErrorHandlers().forEach((Instance) => {
-      // add the error handler to the express app
-      OctoErrorHandler.attach(server.getExpressApp(), Instance);
-    });
+          expressApp.use(Instance.getBasePath(), router);
+        } else if (OctoRoute.isRoute(Instance)) {
+          // add the route to the express app
+          OctoRoute.attach(expressApp, Instance);
+        } else if (OctoOperation.isOperation(Instance)) {
+          // add the operator to the express app
+          OctoOperation.attach(expressApp, Instance);
+        }
+      });
+
+      // add a 404 handler
+      expressApp.use((request, response, next) => {
+        if (response.statusCode === 200) {
+          response.status(404);
+        }
+        next();
+      });
+
+      routeHandler.getErrorHandlers().forEach((Instance) => {
+        // add the error handler to the express app
+        OctoErrorHandler.attach(expressApp, Instance);
+      });
+    };
+
+    bindActions(this.routeHandler, server.getExpressApp());
 
     return server.boot();
   }

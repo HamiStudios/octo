@@ -86,6 +86,22 @@ class OctoRouter {
   }
 
   /**
+   * Add a router to the app
+   *
+   * @param {OctoRouter} router The router to add
+   *
+   * @throws {Error} throws when the router can't be added
+   *
+   * @return {boolean} Whether or not it was added
+   */
+  addRouter(router) {
+    const added = this.routeHandler.add(router);
+
+    if (added) return true;
+    throw new Error(`Failed to add router '${router.prototype.constructor.name}' to the app because it isn't an instance of OctoRouter`);
+  }
+
+  /**
    * Get all the routes
    *
    * @return {OctoRoute[]} An array of routes
@@ -113,9 +129,18 @@ class OctoRouter {
   }
 
   /**
-   * Get all routes, operations and error handlers
+   * Get all routers
    *
-   * @return {*[]} An array of all routes, operations and error handlers
+   * @return {OctoRouter[]} An array of routers
+   */
+  getRouters() {
+    return this.routeHandler.getRouters();
+  }
+
+  /**
+   * Get all routes, operations, error handlers and routers
+   *
+   * @return {*[]} An array of all routes, operations, error handlers and routers
    */
   getInstances() {
     return this.routeHandler.getInstances();

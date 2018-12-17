@@ -13,6 +13,8 @@ class OctoErrorHandler extends OctoAction {
    * @return {boolean} Whether or not it is an OctoErrorHandler
    */
   static isHandler(Instance = null) {
+    if (Instance.prototype === undefined) return false;
+
     const instance = new Instance();
 
     return Instance !== undefined

@@ -13,6 +13,8 @@ class OctoOperation extends OctoAction {
    * @return {boolean} Whether or not it is an OctoOperation
    */
   static isOperation(Instance = null) {
+    if (Instance.prototype === undefined) return false;
+
     const instance = new Instance();
 
     return Instance !== undefined
