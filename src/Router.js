@@ -25,7 +25,7 @@ class OctoRouter {
   static isRouter(router = null) {
     return router !== undefined
       && router !== null
-      && router instanceof Router;
+      && router instanceof OctoRouter;
   }
 
   /**
