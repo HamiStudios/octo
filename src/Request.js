@@ -1,3 +1,6 @@
+// npm
+import * as o from 'o';
+
 // octo
 import OctoRequestBody from './RequestBody';
 import OctoRequestParams from './RequestParams';
@@ -16,6 +19,15 @@ class OctoRequest {
      * @private
      */
     this.request = request;
+
+    // set the state as a empty object (if not already set)
+    if (!o.is(this.request.app.data)) {
+      this.request.app.data = {};
+    }
+
+    if (!o.is(this.request.app.data.octoState)) {
+      this.request.app.data.octoState = {};
+    }
   }
 
   /**
@@ -144,6 +156,25 @@ class OctoRequest {
    */
   getHeader(name) {
     return this.request.get(name);
+  }
+
+  /**
+   * Set the request stack state
+   *
+   * @param {Object} state The state to set (gets merged onto current state)
+   */
+  setState(state = {}) {
+    const currentState = this.request.app.data.octoState;
+    this.request.app.data.octoState = o.merge(currentState, state);
+  }
+
+  /**
+   * Get the current state
+   *
+   * @return {*}
+   */
+  getState() {
+    return o.merge({}, this.request.app.data.octoState);
   }
 
   /**
