@@ -13,6 +13,8 @@ class OctoErrorHandler extends OctoAction {
    * @return {boolean} Whether or not it is an OctoErrorHandler
    */
   static isHandler(Instance = null) {
+    if (Instance.prototype === undefined) return false;
+
     const instance = new Instance();
 
     return Instance !== undefined
@@ -32,8 +34,8 @@ class OctoErrorHandler extends OctoAction {
    */
   static attach(expressApp, Instance) {
     const bind = (methods = OctoMethod.values()) => {
-      const callback = async (request, response, next) => {
-        const context = new OctoContext(request, response, next);
+      const getExpressCallback = pathHook => async (request, response, next) => {
+        const context = new OctoContext(request, response, next, pathHook);
 
         const handleError = async (errors) => {
           if (errors.indexOf(context.getResponse().getStatus()) > -1) {
@@ -51,16 +53,30 @@ class OctoErrorHandler extends OctoAction {
         }
 
         if (!context.getResponse().headersAreSent()
-            && !context.getResponse().isRenderingView()
-            && !context.isMovingToNext()) {
+          && !context.getResponse().isRenderingView()
+          && !context.isMovingToNext()) {
           context.getNextHandler()();
         }
       };
 
       if (Instance.path !== undefined) {
-        expressApp.use(Instance.path, callback);
+        if (Array.isArray(Instance.path)) {
+          Instance.path.forEach((path) => {
+            expressApp.use(
+              Instance.path,
+              getExpressCallback(path),
+            );
+          });
+        } else {
+          expressApp.use(
+            Instance.path,
+            getExpressCallback(Instance.path),
+          );
+        }
       } else {
-        expressApp.use(callback);
+        expressApp.use(
+          getExpressCallback(undefined),
+        );
       }
     };
 

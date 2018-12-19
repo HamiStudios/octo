@@ -41,6 +41,15 @@ class OctoAction {
   }
 
   /**
+   * Get the path which caught the request and caused the handler to be ran
+   *
+   * @return {string} The path hook
+   */
+  getPathHook() {
+    return this.ctx.getPathHook();
+  }
+
+  /**
    * Get the raw context
    *
    * @return {OctoContext}

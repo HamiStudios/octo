@@ -10,8 +10,9 @@ class OctoContext {
    * @param {Object} request An express request instance
    * @param {Object} response An express response instance
    * @param {function} next A express next function
+   * @param {string} pathHook The path which caught the request and caused the handler to be ran
    */
-  constructor(request, response, next) {
+  constructor(request, response, next, pathHook) {
     this.express = {
       request,
       response,
@@ -22,6 +23,8 @@ class OctoContext {
       request: new OctoRequest(request),
       response: new OctoResponse(response),
     };
+
+    this.pathHook = pathHook;
 
     this.movingToNext = false;
   }
@@ -60,6 +63,15 @@ class OctoContext {
    */
   getRawResponse() {
     return this.express.response;
+  }
+
+  /**
+   * Get the path which caught the request and caused the handler to be ran
+   *
+   * @return {string} The path hook
+   */
+  getPathHook() {
+    return this.pathHook;
   }
 
   /**

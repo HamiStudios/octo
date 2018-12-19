@@ -36,8 +36,8 @@ class OctoRoute extends OctoAction {
     const bind = (method) => {
       const methodFunc = String(method).toLowerCase();
 
-      const expressCallback = async (request, response, next) => {
-        const context = new OctoContext(request, response, next);
+      const getExpressCallback = pathHook => async (request, response, next) => {
+        const context = new OctoContext(request, response, next, pathHook);
         const instance = new Instance(context);
 
         if (instance.before !== undefined) {
@@ -61,13 +61,13 @@ class OctoRoute extends OctoAction {
         Instance.path.forEach((path) => {
           expressApp[methodFunc](
             path,
-            expressCallback,
+            getExpressCallback(path),
           );
         });
       } else {
         expressApp[methodFunc](
           Instance.path,
-          expressCallback,
+          getExpressCallback(Instance.path),
         );
       }
     };
