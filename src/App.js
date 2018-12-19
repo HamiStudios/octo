@@ -47,6 +47,11 @@ class OctoApp {
      * @private
      */
     this.routeHandler = new OctoRouteHandler();
+
+    /**
+     * @private
+     */
+    this.compiledRoutes = [];
   }
 
   /**
@@ -57,6 +62,9 @@ class OctoApp {
    * @param {OctoServer} server The server to setup
    */
   init(server) {
+    // clear compiled routes
+    this.compiledRoutes = [];
+
     // if options.helmet is an object or is enabled
     if (isObject(this.options.helmet) || this.options.helmet === true) {
       // if options.helmet.modules is an array
@@ -202,6 +210,15 @@ class OctoApp {
   }
 
   /**
+   * Get compiled routes
+   *
+   * @returns {Object[]} Get an array of compiled routes
+   */
+  getCompiledRoutes() {
+    return this.compiledRoutes;
+  }
+
+  /**
    * Start the app
    *
    * @param {OctoServer} server The server to start
@@ -209,18 +226,23 @@ class OctoApp {
   async start(server) {
     this.init(server);
 
-    const bindActions = (routeHandler, expressApp) => {
+    const bindActions = (routeHandler, expressApp, prefix = '') => {
       routeHandler.getInstances().forEach((Instance) => {
         if (OctoRouter.isRouter(Instance)) {
           // add all routes, operations, error handlers and inner routes to the express app
           const router = new ExpressRouter();
 
-          bindActions(Instance.routeHandler, router);
+          bindActions(Instance.routeHandler, router, `${prefix}${Instance.getBasePath()}`);
 
           expressApp.use(Instance.getBasePath(), router);
         } else if (OctoRoute.isRoute(Instance)) {
           // add the route to the express app
           OctoRoute.attach(expressApp, Instance);
+
+          this.compiledRoutes.push({
+            method: Instance.method,
+            path: `${prefix}${Instance.path}`,
+          });
         } else if (OctoOperation.isOperation(Instance)) {
           // add the operator to the express app
           OctoOperation.attach(expressApp, Instance);
