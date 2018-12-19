@@ -20,7 +20,7 @@ class OctoRoute extends OctoAction {
       && Instance !== null
       && instance instanceof OctoRoute
       && hasProp(Instance, 'method', 'string', true, true)
-      && hasProp(Instance, 'path', 'string', false, true)
+      && hasProp(Instance, 'path', 'string', true, true)
       && hasFunction(instance, 'render', true)
       && hasFunction(instance, 'before')
       && hasFunction(instance, 'after');
@@ -36,29 +36,40 @@ class OctoRoute extends OctoAction {
     const bind = (method) => {
       const methodFunc = String(method).toLowerCase();
 
-      expressApp[methodFunc](
-        Instance.path,
-        async (request, response, next) => {
-          const context = new OctoContext(request, response, next);
-          const instance = new Instance(context);
+      const expressCallback = async (request, response, next) => {
+        const context = new OctoContext(request, response, next);
+        const instance = new Instance(context);
 
-          if (instance.before !== undefined) {
-            await instance.before();
-          }
+        if (instance.before !== undefined) {
+          await instance.before();
+        }
 
-          await instance.render();
+        await instance.render();
 
-          if (instance.after !== undefined) {
-            await instance.after();
-          }
+        if (instance.after !== undefined) {
+          await instance.after();
+        }
 
-          if (!context.getResponse().headersAreSent()
-              && !context.getResponse().isRenderingView()
-              && !context.isMovingToNext()) {
-            context.getNextHandler()();
-          }
-        },
-      );
+        if (!context.getResponse().headersAreSent()
+          && !context.getResponse().isRenderingView()
+          && !context.isMovingToNext()) {
+          context.getNextHandler()();
+        }
+      };
+
+      if (Array.isArray(Instance.path)) {
+        Instance.path.forEach((path) => {
+          expressApp[methodFunc](
+            path,
+            expressCallback,
+          );
+        });
+      } else {
+        expressApp[methodFunc](
+          Instance.path,
+          expressCallback,
+        );
+      }
     };
 
     if (Array.isArray(Instance.method)) {
