@@ -13,8 +13,6 @@ class OctoErrorHandler extends OctoAction {
    * @return {boolean} Whether or not it is an OctoErrorHandler
    */
   static isHandler(Instance = null) {
-    if (Instance.prototype === undefined) return false;
-
     const instance = new Instance();
 
     return Instance !== undefined
@@ -22,7 +20,7 @@ class OctoErrorHandler extends OctoAction {
       && instance instanceof OctoErrorHandler
       && hasProp(Instance, 'error', 'number', true, true)
       && hasProp(Instance, 'method', 'string', true)
-      && hasProp(Instance, 'path', 'string', false)
+      && hasProp(Instance, 'path', 'string', true)
       && hasFunction(instance, 'handle', true);
   }
 
