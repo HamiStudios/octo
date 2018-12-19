@@ -239,10 +239,19 @@ class OctoApp {
           // add the route to the express app
           OctoRoute.attach(expressApp, Instance);
 
-          this.compiledRoutes.push({
-            method: Instance.method,
-            path: `${prefix}${Instance.path}`,
-          });
+          if (Array.isArray(Instance.path)) {
+            Instance.path.forEach((path) => {
+              this.compiledRoutes.push({
+                method: Instance.method,
+                path: `${prefix}${path}`,
+              });
+            });
+          } else {
+            this.compiledRoutes.push({
+              method: Instance.method,
+              path: `${prefix}${Instance.path}`,
+            });
+          }
         } else if (OctoOperation.isOperation(Instance)) {
           // add the operator to the express app
           OctoOperation.attach(expressApp, Instance);
