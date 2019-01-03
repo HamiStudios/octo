@@ -244,12 +244,14 @@ class OctoApp {
               this.compiledRoutes.push({
                 method: Instance.method,
                 path: `${prefix}${path}`,
+                instance: Instance,
               });
             });
           } else {
             this.compiledRoutes.push({
               method: Instance.method,
               path: `${prefix}${Instance.path}`,
+              instance: Instance,
             });
           }
         } else if (OctoOperation.isOperation(Instance)) {
